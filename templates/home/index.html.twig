@@ -108,26 +108,27 @@
                 <div id="tab-1" class="tab-pane fade show p-0 active">
                     <div class="row g-4">
                         <div class="col-lg-12">
-                            {# <div class="row g-4">
+                            <div class="row g-4">
                               {% for top in topIntrant %}
                                 <div class="col-md-6 col-lg-4 col-xl-3">
                                     <div class="rounded position-relative fruite-item">
                                         <div class="fruite-img">
-                                            <img src="{{top.imageProduit }}" class="img-fluid w-100 rounded-top" alt="">
+                                            <img src="{{top.ImageProduit }}" class="img-fluid w-100 rounded-top" width="150" alt="image">
                                         </div>
-                                        <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">Fruits</div>
+                                        <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;"> <p class="text-dark fs-5 fw-bold mb-0">{{ top.localisation}}</p></div>
                                         <div class="p-4 border border-secondary border-top-0 rounded-bottom">
                                             <h4>{{ top.nomProduit }}</h4>
-                                            <p>{{ top.description }}</p>
+                                            <p>{{ top.descrition }}</p>
                                             <div class="d-flex justify-content-between flex-lg-wrap">
+                                               
                                                 <p class="text-dark fs-5 fw-bold mb-0">{{ top.prixProduit}}</p>
-                                                <a href="{{ path("app_detail")}}" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i>Detail</a>
+                                                <a href="{{ path("app_detail", {'id': top.id})}}" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i>Detail</a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                               {% endfor %}
-                            </div> #}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -313,44 +314,58 @@
 </div>
 <!-- Fruits Shop End-->
 
-
 <!-- Featurs Start -->
 <div class="container-fluid service py-5">
     <div class="container py-5">
         <div class="row g-4 justify-content-center">
-            <div class="col-md-6 col-lg-4">
+              <h3 class="text-center"> offres speciales</h3>
+
+            <div class="col-md-6 col-lg-3">
                 <a href="#">
                     <div class="service-item bg-secondary rounded border border-secondary">
-                        <img src="img/featur-1.jpg" class="img-fluid rounded-top w-100" alt="">
+                        <img src="img/ford1.jpg" class="img-fluid rounded-top w-100" alt="">
                         <div class="px-4 rounded-bottom">
                             <div class="service-content bg-primary text-center p-4 rounded">
-                                <h5 class="text-white">Meilleur offre des sémences</h5>
+                                <h5 class="text-white">Meilleur offre des vehicules</h5>
                                 <h3 class="mb-0">20% </h3>
                             </div>
                         </div>
                     </div>
                 </a>
             </div>
-            <div class="col-md-6 col-lg-4">
+            <div class="col-md-6 col-lg-3">
                 <a href="#">
                     <div class="service-item bg-dark rounded border border-dark">
-                        <img src="img/featur-2.jpg" class="img-fluid rounded-top w-100" alt="">
+                        <img src="img/ist1.jpg" class="img-fluid rounded-top w-100" alt="">
                         <div class="px-4 rounded-bottom">
                             <div class="service-content bg-light text-center p-4 rounded">
-                                <h5 class="text-primary">Meilleur offre pour angrais</h5>
-                                <h3 class="mb-0">Lire la suite</h3>
+                                <h5 class="text-primary">Meilleur  vehicules de transport</h5>
+                                <h3 class="mb-0">Lire la suite</h3> <br>
                             </div>
                         </div>
                     </div>
                 </a>
             </div>
-            <div class="col-md-6 col-lg-4">
+            <div class="col-md-6 col-lg-3">
                 <a href="#">
                     <div class="service-item bg-primary rounded border border-primary">
-                        <img src="img/featur-3.jpg" class="img-fluid rounded-top w-100" alt="">
+                        <img src="img/v7.jpg" class="img-fluid rounded-top w-100" alt="">
                         <div class="px-4 rounded-bottom">
                             <div class="service-content bg-secondary text-center p-4 rounded">
-                                <h5 class="text-white">meilleur offre pour les bétails</h5>
+                                <h5 class="text-white">meilleur offre d'importattion</h5>
+                                <h3 class="mb-0">lire la suite</h3>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <a href="#">
+                    <div class="service-item bg-primary rounded border border-primary">
+                        <img src="img/v7.jpg" class="img-fluid rounded-top w-100" alt="">
+                        <div class="px-4 rounded-bottom">
+                            <div class="service-content bg-secondary text-center p-4 rounded">
+                                <h5 class="text-white">meilleur offre d'importattion</h5>
                                 <h3 class="mb-0">lire la suite</h3>
                             </div>
                         </div>

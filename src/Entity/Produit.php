@@ -20,14 +20,26 @@ class Produit
     #[ORM\Column]
     private ?int $prixProduit = null;
 
-    #[ORM\Column(type: Types::BLOB)]
-    private $ImageProduit;
 
     #[ORM\Column(length: 255)]
     private ?string $localisation = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $ceatedAt = null;
+
+    #[ORM\ManyToOne(inversedBy: 'produits')]
+    private ?User $createdBy = null;
+
+    #[ORM\ManyToOne(inversedBy: 'produits')]
+    private ?CategorieVehicule $categorie = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $descrition = null;
+
+    #[ORM\Column(length:255)]
+    private $ImageProduit = null;
+
+   
 
     public function getId(): ?int
     {
@@ -58,17 +70,6 @@ class Produit
         return $this;
     }
 
-    public function getImageProduit()
-    {
-        return $this->ImageProduit;
-    }
-
-    public function setImageProduit($ImageProduit): static
-    {
-        $this->ImageProduit = $ImageProduit;
-
-        return $this;
-    }
 
     public function getLocalisation(): ?string
     {
@@ -93,4 +94,55 @@ class Produit
 
         return $this;
     }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $createdBy): static
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    public function getCategorie(): ?CategorieVehicule
+    {
+        return $this->categorie;
+    }
+
+    public function setCategorie(?CategorieVehicule $categorie): static
+    {
+        $this->categorie = $categorie;
+
+        return $this;
+    }
+
+    public function getDescrition(): ?string
+    {
+        return $this->descrition;
+    }
+
+    public function setDescrition(string $descrition): static
+    {
+        $this->descrition = $descrition;
+
+        return $this;
+    }
+
+    public function getImageProduit()
+    {
+        return $this->ImageProduit;
+    }
+
+    public function setImageProduit($imageProduit): static
+    {
+        $this->ImageProduit = $imageProduit;
+
+        return $this;
+    }
+
+
+
 }

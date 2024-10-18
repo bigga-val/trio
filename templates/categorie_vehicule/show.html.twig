@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CategorieVehicule{% endblock %}
+
+{% block body %}
+    <h1>CategorieVehicule</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ categorie_vehicule.id }}</td>
+            </tr>
+            <tr>
+                <th>NomCategorie</th>
+                <td>{{ categorie_vehicule.nomCategorie }}</td>
+            </tr>
+            <tr>
+                <th>Active</th>
+                <td>{{ categorie_vehicule.active ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_categorie_vehicule_index') }}">back to list</a>
+
+    <a href="{{ path('app_categorie_vehicule_edit', {'id': categorie_vehicule.id}) }}">edit</a>
+
+    {{ include('categorie_vehicule/_delete_form.html.twig') }}
+{% endblock %}

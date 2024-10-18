@@ -40,4 +40,20 @@ class ProduitRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+
+    public function getIndexForIntrants(){
+        $query = $this->getEntityManager()->createQuery(
+           '
+           SELECT p.nomProduit, p.prixProduit, p.ImageProduit, p.descrition, p.id, p.localisation
+            FROM App\Entity\Produit p WHERE  p.categorie = (
+              SELECT c.id 
+              From App\Entity\categorieVehicule c 
+              WHERE c.nomCategorie=:nom
+            )  order by p.nomProduit DESC
+            ');
+            return $query->setParameter('nom','vehicule de lux')->setMaxResults(4)->getResult();
+      }
+
+
 }

@@ -1,0 +1,58 @@
+<?php
+
+namespace App\Form;
+
+use App\Entity\Produit;
+use App\Entity\User;
+use App\Entity\CategorieVehicule;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+
+
+class ProduitType extends AbstractType
+{
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+        $builder
+            ->add('nomProduit', TextType::class, [
+                 'attr' => ['placeholder' => 'Entrez le nom du vehicule']
+            ])
+            ->add('prixProduit', TextType::class, [
+                'attr' => ['placeholder' => 'Entrez le prix du vehicule']
+                ]
+                )
+            ->add('descrition', TextType::class, [
+                'attr' => ['placeholder' => 'Entrez la description du vehicule']
+                ])
+            ->add('ImageProduit',FileType::class, [
+                'label'=> 'Image'
+            ]
+            )
+            ->add('localisation',TextType::class, [
+                'attr' => ['placeholder' => 'Entrez la localisation du vehicule']
+                ])
+            ->add('categorie', EntityType::class, [
+                'class'=>CategorieVehicule::class,
+                'choice_label'=>'nomCategorie',
+            ])
+            ->add('ceatedAt', null, [
+                'widget' => 'single_text',
+            ])
+            ->add('createdBy', EntityType::class, [
+                'class' => User::class,
+                'choice_label' => 'username',
+            ])
+        ;
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'data_class' => Produit::class,
+        ]);
+    }
+}
