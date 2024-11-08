@@ -1,43 +1,66 @@
-{% extends 'base.html.twig' %}
 
-{% block title %}Produit index{% endblock %}
 
-{% block body %}
-    <h1>Produit index</h1>
+{% include "extensions/navbarTab.html.twig" %}
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>NomProduit</th>
-                <th>PrixProduit</th>
-                <th>ImageProduit</th>
-                <th>Localisation</th>
-                <th>CeatedAt</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for produit in produits %}
-            <tr>
-                <td>{{ produit.id }}</td>
-                <td>{{ produit.nomProduit }}</td>
-                <td>{{ produit.prixProduit }}</td>
-                <td>{{ produit.ImageProduit }}</td>
-                <td>{{ produit.localisation }}</td>
-                <td>{{ produit.ceatedAt ? produit.ceatedAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>
-                    <a href="{{ path('app_produit_show', {'id': produit.id}) }}">show</a>
-                    <a href="{{ path('app_produit_edit', {'id': produit.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="7">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_produit_new') }}">Create new</a>
-{% endblock %}
+<div class="content-wrapper">
+    <section class="content">
+          <div class="container-fluid">
+            <div class="row">
+              <!-- left column -->
+              <div class="col-md-2">
+              </div>
+              <div class="col-md-12">
+                <!-- general form elements -->
+                <div class="card card-primary">
+                  {# <div class="card-header">
+                    <h3 class="card-title">Ajouter un service</h3>
+                  </div> #}
+                  <!-- /.card-header -->
+                  <!-- form start -->
+                 
+                      <div class="row">
+                        
+                          <div class="col-md-12"> <br>
+                                <table class="table  bg-blue-sky"> 
+                                           <thead class="bg-info">
+                                                <tr class="text-center">
+                                                    <th>#</th>
+                                                    <th>NomProduit</th>
+                                                    <th>PrixProduit</th>
+                                                    <th>ImageProduit</th>
+                                                    <th>Localisation</th>
+                                                    <th>CeatedAt</th>
+                                                    <th>actions</th>
+                                                </tr>
+                                            </thead>
+                                             <tbody>
+                                                    {% for produit in produits %}
+                                                        <tr class="text-center">
+                                                            <td>{{ produit.id }}</td>
+                                                            <td>{{ produit.nomProduit }}</td>
+                                                            <td>{{ produit.prixProduit }}</td>
+                                                            <td> <img src="{{ produit.ImageProduit }}" alt="image" width="30"></td>
+                                                            <td>{{ produit.localisation }}</td>
+                                                            <td>{{ produit.ceatedAt ? produit.ceatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                                                            <td>
+                                                                <a href="{{ path('app_produit_show', {'id': produit.id}) }}" class="btn btn-outline-primary">show</a>
+                                                                <a href="{{ path('app_produit_edit', {'id': produit.id}) }}" class="btn btn-outline-warning">edit</a>
+                                                                <a href="{{ path('app_produit_new') }}" class="btn btn-outline-info">Create new</a>
+                                                            </td>
+                                                        </tr>
+                                                    {% else %}
+                                                        <tr>
+                                                            <td colspan="7">no records found</td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                    </tbody>
+                                    </table>
+                          </div>
+                  </div>
+                
+                </div>
+              </div>
+           </div>
+         </div>
+    </section>
+    </div>

@@ -39,6 +39,12 @@ class Produit
     #[ORM\Column(length:255)]
     private $ImageProduit = null;
 
+    #[ORM\ManyToOne(inversedBy: 'produits')]
+    private ?Devise $devise = null;
+
+    #[ORM\ManyToOne(inversedBy: 'produits')]
+    private ?Services $service = null;
+
    
 
     public function getId(): ?int
@@ -139,6 +145,30 @@ class Produit
     public function setImageProduit($imageProduit): static
     {
         $this->ImageProduit = $imageProduit;
+
+        return $this;
+    }
+
+    public function getDevise(): ?Devise
+    {
+        return $this->devise;
+    }
+
+    public function setDevise(?Devise $devise): static
+    {
+        $this->devise = $devise;
+
+        return $this;
+    }
+
+    public function getService(): ?Services
+    {
+        return $this->service;
+    }
+
+    public function setService(?Services $service): static
+    {
+        $this->service = $service;
 
         return $this;
     }

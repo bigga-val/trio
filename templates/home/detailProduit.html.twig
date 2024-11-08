@@ -47,7 +47,7 @@
                             <div class="col-lg-6">
                                 <h4 class="fw-bold mb-3">{{prod.nomProduit}}</h4>
                                 <p class="mb-3">Categorie:  {{prod.categorie.nomCategorie}}</p>
-                                <h5 class="fw-bold mb-3">3,35 $</h5>
+                                <h5 class="fw-bold mb-3">{{prod.prixProduit}}   {{prod.devise.designation}}</h5>
                                 <div class="d-flex mb-4">
                                     <i class="fa fa-star text-secondary"></i>
                                     <i class="fa fa-star text-secondary"></i>
@@ -55,7 +55,7 @@
                                     <i class="fa fa-star text-secondary"></i>
                                     <i class="fa fa-star"></i>
                                 </div>
-                                <p class="mb-4"> Ces engrais sont riches en phosphore, qui est essentiel pour le développement des racines, la floraison et la production de fruits. Le superphosphate, </p>
+                                <p class="mb-4">{{prod.descrition}} </p>
                                 <p class="mb-4">le phosphate diammonique (DAP) et le phosphate de roche sont des exemples d'engrais phosphatés.</p>
                                 <div class="input-group quantity mb-5" style="width: 100px;">
                                     <div class="input-group-btn">
@@ -70,7 +70,7 @@
                                         </button>
                                     </div>
                                 </div>
-                                {# <a href="{{path("app_cart")}}" class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a> #}
+                                <a href="{{path('app_client_new')}}" class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i>ENTREZ EN CONTACT</a>
                             </div>
                             <div class="col-lg-12">
                                 <nav>

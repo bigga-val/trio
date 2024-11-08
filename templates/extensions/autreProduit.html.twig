@@ -4,122 +4,22 @@
         <h1 class="mb-0">Autres produits </h1>
         <div class="owl-carousel vegetable-carousel justify-content-center">
 
-          {# {% for sli in sliderProd %}
+          {% for sli in sliderProd %}
             <div class="border border-primary rounded position-relative vesitable-item">
                 <div class="vesitable-img">
                     <img src="{{sli.imageProduit}}" class="img-fluid w-100 rounded-top" alt="">
                 </div>
-                <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">céréales</div>
+                <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">{{sli.localisation}}</div>
                 <div class="p-4 rounded-bottom">
                     <h4>{{sli.nomProduit}}</h4>
-                    <p>{{ sli.description}}</p>
+                    <p>{{ sli.descrition}}</p>
                     <div class="d-flex justify-content-between flex-lg-wrap">
                         <p class="text-dark fs-5 fw-bold mb-0">{{ sli.prixProduit }}</p>
-                        <a href="{{ path('app_produit_show', {'id': sli.id}) }}" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i>Detail</a>
+                        <a href="{{ path('app_detail', {'id': sli.id}) }}" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i>Detail</a>
                     </div>
                 </div>
             </div>
-           {% endfor %} #}
-
-
-            <div class="border border-primary rounded position-relative vesitable-item">
-                <div class="vesitable-img">
-                    <img src="img/v10.jpg" class="img-fluid w-100 rounded-top" alt="">
-                </div>
-                <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">legumes</div>
-                <div class="p-4 rounded-bottom">
-                    <h4>Semences de légumes</h4>
-                    <p>Cela comprend des semences pour une variété de légumes tels que les tomates, les carottes</p>
-                    <div class="d-flex justify-content-between flex-lg-wrap">
-                        {# <p class="text-dark fs-5 fw-bold mb-0">$4.99 / kg</p> #}
-                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i>Detail</a>
-                    </div>
-                </div>
-            </div>
-            <div class="border border-primary rounded position-relative vesitable-item">
-                <div class="vesitable-img">
-                    <img src="img/v3.jpg" class="img-fluid w-100 rounded-top bg-light" alt="">
-                </div>
-                <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Fruits</div>
-                <div class="p-4 rounded-bottom">
-                    <h4>Semences de fruits</h4>
-                    <p>Cela comprend des semences pour une variété de fruits tels que les pommes, les oranges, les bananes,</p>
-                    <div class="d-flex justify-content-between flex-lg-wrap">
-                        {# <p class="text-dark fs-5 fw-bold mb-0">$7.99 / kg</p> #}
-                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i>Detail</a>
-                    </div>
-                </div>
-            </div>
-            <div class="border border-primary rounded position-relative vesitable-item">
-                <div class="vesitable-img">
-                    <img src="img/sem2.jpg" class="img-fluid w-100 rounded-top" alt="">
-                </div>
-                <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">oléagineuses</div>
-                <div class="p-4 rounded-bottom">
-                    <h4>plantes oléagineuses</h4>
-                    <p>Cela comprend des semences pour des cultures telles que le soja, le tournesol, le colza</p>
-                    <div class="d-flex justify-content-between flex-lg-wrap">
-                        {# <p class="text-dark fs-5 fw-bold mb-0">$7.99 / kg</p> #}
-                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i>Detail</a>
-                    </div>
-                </div>
-            </div>
-            <div class="border border-primary rounded position-relative vesitable-item">
-                <div class="vesitable-img">
-                    <img src="img/vegetable-item-5.jpg" class="img-fluid w-100 rounded-top" alt="">
-                </div>
-                <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">fourragères</div>
-                <div class="p-4 rounded-bottom">
-                    <h4>plantes fourragères</h4>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-                    <div class="d-flex justify-content-between flex-lg-wrap">
-                        {# <p class="text-dark fs-5 fw-bold mb-0">$7.99 / kg</p> #}
-                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i>Detail</a>
-                    </div>
-                </div>
-            </div>
-            <div class="border border-primary rounded position-relative vesitable-item">
-                <div class="vesitable-img">
-                    <img src="img/c3.jpg" class="img-fluid w-100 rounded-top" alt="">
-                </div>
-                <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">aromatiques</div>
-                <div class="p-4 rounded-bottom">
-                    <h4>médicinales et aromatiques</h4>
-                    <p>Cela comprend des semences pour des plantes utilisées à des fins médicinales</p>
-                    <div class="d-flex justify-content-between flex-lg-wrap">
-                        <p class="text-dark fs-5 fw-bold mb-0">$7.99 / kg</p>
-                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                    </div>
-                </div>
-            </div>
-            <div class="border border-primary rounded position-relative vesitable-item">
-                <div class="vesitable-img">
-                    <img src="img/vegetable-item-5.jpg" class="img-fluid w-100 rounded-top" alt="">
-                </div>
-                <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Vegetable</div>
-                <div class="p-4 rounded-bottom">
-                    <h4>Potatoes</h4>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-                    <div class="d-flex justify-content-between flex-lg-wrap">
-                        <p class="text-dark fs-5 fw-bold mb-0">$7.99 / kg</p>
-                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                    </div>
-                </div>
-            </div>
-            <div class="border border-primary rounded position-relative vesitable-item">
-                <div class="vesitable-img">
-                    <img src="img/vegetable-item-6.jpg" class="img-fluid w-100 rounded-top" alt="">
-                </div>
-                <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">Vegetable</div>
-                <div class="p-4 rounded-bottom">
-                    <h4>Parsely</h4>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-                    <div class="d-flex justify-content-between flex-lg-wrap">
-                        <p class="text-dark fs-5 fw-bold mb-0">$7.99 / kg</p>
-                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
-                    </div>
-                </div>
-            </div>
+           {% endfor %}
         </div>
     </div>
 </div>

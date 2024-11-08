@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Produit;
 use App\Entity\User;
 use App\Entity\CategorieVehicule;
+use App\Entity\Devise;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -38,6 +39,10 @@ class ProduitType extends AbstractType
             ->add('categorie', EntityType::class, [
                 'class'=>CategorieVehicule::class,
                 'choice_label'=>'nomCategorie',
+            ])
+            ->add('devise', EntityType::class, [
+                'class'=>Devise::class,
+                'choice_label'=>'designation',
             ])
             ->add('ceatedAt', null, [
                 'widget' => 'single_text',

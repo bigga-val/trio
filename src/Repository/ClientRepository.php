@@ -2,22 +2,22 @@
 
 namespace App\Repository;
 
-use App\Entity\CategorieVehicule;
+use App\Entity\Client;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<CategorieVehicule>
+ * @extends ServiceEntityRepository<Client>
  */
-class CategorieVehiculeRepository extends ServiceEntityRepository
+class ClientRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, CategorieVehicule::class);
+        parent::__construct($registry, Client::class);
     }
 
     //    /**
-    //     * @return CategorieVehicule[] Returns an array of CategorieVehicule objects
+    //     * @return Client[] Returns an array of Client objects
     //     */
     //    public function findByExampleField($value): array
     //    {
@@ -31,7 +31,7 @@ class CategorieVehiculeRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?CategorieVehicule
+    //    public function findOneBySomeField($value): ?Client
     //    {
     //        return $this->createQueryBuilder('c')
     //            ->andWhere('c.exampleField = :val')
@@ -40,16 +40,4 @@ class CategorieVehiculeRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
-
-
-    public function produitByCategorie($categorie){
-        $entityManager = $this->getEntityManager();
-        $query = $entityManager->createQuery('
-              select p.nomProduit, p.prixProduit, p.localisation, p.ImageProduit, p.descrition, c.nomCategorie
-              from App\Entity\produit p, App\Entity\categorieVehicule c
-              WHERE p.categorie = c.id
-              and c.nomCategorie=:cat
-        ');
-        return $query->setParameter('cat',$categorie)->getResult();
-    }
 }

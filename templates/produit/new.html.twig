@@ -15,11 +15,11 @@
                   </div>
                   <!-- /.card-header -->
                   <!-- form start -->
-                  {{ form_start(form) }}
-                  <div class="row">
-                  
-                       <div class="col-md-4"> 
-                               <form>
+                  {{ form_start(form)}}
+                     <form>
+                        <div class="row">
+                            <div class="col-md-4"> 
+                             
                                       <div class="form-group"> <br>
                                         {{ form_widget(form.nomProduit, {'attr': {'class': 'form-control', 'required':'required'}}) }}
                                       </div>
@@ -53,11 +53,12 @@
                                 {# <label for="exampleInputPassword1">image </label> #}
                                   {{ form_widget(form.ImageProduit, {'attr': {'class': 'form-control'}}) }}
                               </div>
-                              
-                          </form>
+                               <div class="form-group">
+                                   {{ form_widget(form.devise, {'attr': {'class': 'form-control'}}) }}
+                              </div>
                         </div>
-                  </div>
-                  
+                       </div>
+                      </form>
                   {{ form_end(form) }}
                 </div>
               </div>

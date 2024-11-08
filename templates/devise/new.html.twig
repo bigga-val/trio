@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Devise{% endblock %}
+
+{% block body %}
+    <h1>Create new Devise</h1>
+
+    {{ include('devise/_form.html.twig') }}
+
+    <a href="{{ path('app_devise_index') }}">back to list</a>
+{% endblock %}

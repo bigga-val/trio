@@ -1,0 +1,69 @@
+
+{% include "extensions/navbarTab.html.twig" %}
+
+<div class="content-wrapper">
+    <section class="content">
+          <div class="container-fluid">
+            <div class="row">
+              <!-- left column -->
+              <div class="col-md-2">
+              </div>
+              <div class="col-md-12">
+                <!-- general form elements -->
+                <div class="card card-primary">
+                  {# <div class="card-header">
+                    <h3 class="card-title">Ajouter un service</h3>
+                  </div> #}
+                  <!-- /.card-header -->
+                  <!-- form start -->
+                 
+                      <div class="row">
+                         <div class="col-md-2"> 
+                              {# <div class="form-group"> <br>
+                                {{ form_widget(form.designation, {'attr': {'class': 'form-control', 'required':'required', 'placeholder':'designation'}}) }}
+                              </div>
+                              <div class="form-group">
+                                  {{ form_widget(form.createdBy, {'attr': {'class': 'form-control', 'placeholder':'user'}}) }}
+                              </div>
+                               <div class="form-group">
+                                  {{ form_widget(form.active, {'attr': {'class': 'form-control', 'placeholder':'actif'}}) }}
+                              </div>
+                              <button type="submit" class="btn btn-success btn-block">Enregistrer</button><br>
+                              <a href="{{ path('app_services_index') }}" class="btn btn-sm btn-primary btn-block">Liste des vehicules</a><br> #}
+                         </div>
+                          <div class="col-md-7"> <br>
+                                <table class="table  bg-blue-sky"> 
+                                          <thead class="bg-info">
+                                            <tr class=" text-center">
+                                                <th>#</th>
+                                                <th>Designation</th>
+                                                <th>actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for devise in devises %}
+                                                <tr class="text-center">
+                                                    <td>{{ devise.id }}</td>
+                                                    <td>{{ devise.designation }}</td>
+                                                    <td>
+                                                        <a href="{{ path('app_devise_show', {'id': devise.id}) }}" class="btn btn-outline-primary">show</a>
+                                                        <a href="{{ path('app_devise_edit', {'id': devise.id}) }}" class="btn btn-outline-warning">edit</a>
+                                                        <a href="{{ path('app_devise_new') }}" class="btn btn-outline-info">Create new</a>
+                                                    </td>
+                                                </tr>
+                                            {% else %}
+                                                <tr>
+                                                    <td colspan="3">no records found</td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                    </table>
+                          </div>
+                  </div>
+                
+                </div>
+              </div>
+           </div>
+         </div>
+    </section>
+    </div>

@@ -3,36 +3,14 @@
         <div class="mb-3">
             <h4>Categories</h4>
             <ul class="list-unstyled fruite-categorie">
+              {% for cat in categorie %}
                 <li>
                     <div class="d-flex justify-content-between fruite-name">
-                        <a href="#"><i class="fas fa-apple-alt me-2"></i>Angrais</a>
+                        <a href="{{path('prod_by_categorie', {'id':cat.id})}}"><i class="fas fa-apple-alt me-2"></i>{{ cat.nomCategorie }}</a>
                         <span>(3)</span>
                     </div>
                 </li>
-                <li>
-                    <div class="d-flex justify-content-between fruite-name">
-                        <a href="#"><i class="fas fa-apple-alt me-2"></i>Semences</a>
-                        <span>(5)</span>
-                    </div>
-                </li>
-                <li>
-                    <div class="d-flex justify-content-between fruite-name">
-                        <a href="#"><i class="fas fa-apple-alt me-2"></i>Insecticide</a>
-                        <span>(2)</span>
-                    </div>
-                </li>
-                <li>
-                    <div class="d-flex justify-content-between fruite-name">
-                        <a href="#"><i class="fas fa-apple-alt me-2"></i>pesticides</a>
-                        <span>(8)</span>
-                    </div>
-                </li>
-                <li>
-                    <div class="d-flex justify-content-between fruite-name">
-                        <a href="#"><i class="fas fa-apple-alt me-2"></i>Engins</a>
-                        <span>(5)</span>
-                    </div>
-                </li>
+                {% endfor %}
             </ul>
         </div>
     </div>
@@ -40,89 +18,20 @@
     <div class="col-lg-12">
         <div class="mb-3">
             <h4>Autres Services</h4>
-            <div class="mb-2">
-                <input type="radio" class="me-2" id="Categories-1" name="Categories-1" value="Beverages">
-                <label for="Categories-1">Locations des engins</label>
-            </div>
-            <div class="mb-2">
-                <input type="radio" class="me-2" id="Categories-2" name="Categories-1" value="Beverages">
-                <label for="Categories-2">Aliments des bestieux</label>
-            </div>
-            <div class="mb-2">
-                <input type="radio" class="me-2" id="Categories-3" name="Categories-1" value="Beverages">
-                <label for="Categories-3"> vente des semences</label>
-            </div>
-            {# <div class="mb-2">
-                <input type="radio" class="me-2" id="Categories-4" name="Categories-1" value="Beverages">
-                <label for="Categories-4"> Discount</label>
-            </div>
-            <div class="mb-2">
-                <input type="radio" class="me-2" id="Categories-5" name="Categories-1" value="Beverages">
-                <label for="Categories-5"> Expired</label>
-            </div> #}
+          
+              {% for service in autreServe %}
+                <div class="mb-2">
+                    <input type="radio" class="me-2" id="Categories-1" name="Categories-1" value="Beverages">
+                    <a href="{{path('prod_by_categorie', {'id':service.id})}}"><i class="fas fa-apple-alt me-2"></i>{{ service.designation }}</a>
+                </div>
+              {% endfor %}
+          
+           
         </div>
     </div>
     <div class="col-lg-12">
-        <h4 class="mb-3">Featured products</h4>
-        <div class="d-flex align-items-center justify-content-start">
-            <div class="rounded me-4" style="width: 100px; height: 100px;">
-                <img src="img/featur-1.jpg" class="img-fluid rounded" alt="">
-            </div>
-            <div>
-                <h6 class="mb-2">Big Banana</h6>
-                <div class="d-flex mb-2">
-                    <i class="fa fa-star text-secondary"></i>
-                    <i class="fa fa-star text-secondary"></i>
-                    <i class="fa fa-star text-secondary"></i>
-                    <i class="fa fa-star text-secondary"></i>
-                    <i class="fa fa-star"></i>
-                </div>
-                <div class="d-flex mb-2">
-                    <h5 class="fw-bold me-2">2.99 $</h5>
-                    <h5 class="text-danger text-decoration-line-through">4.11 $</h5>
-                </div>
-            </div>
-        </div>
-        <div class="d-flex align-items-center justify-content-start">
-            <div class="rounded me-4" style="width: 100px; height: 100px;">
-                <img src="img/featur-2.jpg" class="img-fluid rounded" alt="">
-            </div>
-            <div>
-                <h6 class="mb-2">Big Banana</h6>
-                <div class="d-flex mb-2">
-                    <i class="fa fa-star text-secondary"></i>
-                    <i class="fa fa-star text-secondary"></i>
-                    <i class="fa fa-star text-secondary"></i>
-                    <i class="fa fa-star text-secondary"></i>
-                    <i class="fa fa-star"></i>
-                </div>
-                <div class="d-flex mb-2">
-                    <h5 class="fw-bold me-2">2.99 $</h5>
-                    <h5 class="text-danger text-decoration-line-through">4.11 $</h5>
-                </div>
-            </div>
-        </div>
-        <div class="d-flex align-items-center justify-content-start">
-            <div class="rounded me-4" style="width: 100px; height: 100px;">
-                <img src="img/featur-3.jpg" class="img-fluid rounded" alt="">
-            </div>
-            <div>
-                <h6 class="mb-2">Big Banana</h6>
-                <div class="d-flex mb-2">
-                    <i class="fa fa-star text-secondary"></i>
-                    <i class="fa fa-star text-secondary"></i>
-                    <i class="fa fa-star text-secondary"></i>
-                    <i class="fa fa-star text-secondary"></i>
-                    <i class="fa fa-star"></i>
-                </div>
-                <div class="d-flex mb-2">
-                    <h5 class="fw-bold me-2">2.99 $</h5>
-                    <h5 class="text-danger text-decoration-line-through">4.11 $</h5>
-                </div>
-            </div>
-        </div>
         <div class="d-flex justify-content-center my-4">
-            <a href="#" class="btn border border-secondary px-4 py-3 rounded-pill text-primary w-100">Vew More</a>
+            <a href="#" class="btn border border-secondary px-4 py-3 rounded-pill text-primary w-100">ENTREZ EN CONTACT</a>
         </div>
     </div>
     {# <div class="col-lg-12">

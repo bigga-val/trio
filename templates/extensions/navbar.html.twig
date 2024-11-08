@@ -30,23 +30,22 @@
                     <div class="collapse navbar-collapse bg-white" id="navbarCollapse">
                         <div class="navbar-nav mx-auto">
                             <a href="#" class="nav-item nav-link active">Home</a>
-                            <a href="" class="nav-item nav-link">Boutique</a>
+                            <a href="{{path('app_boutique')}}" class="nav-item nav-link">Boutique</a>
                             <div class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Fournisseurs</a>
+                                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Categories</a>
                                 <div class="dropdown-menu m-0 bg-secondary rounded-0">
-                                    <a href="#" class="dropdown-item">Fournisseur produits</a>
-                                    <a href="chackout.html" class="dropdown-item">Fournisseur services</a>
-                                    <a href="#" class="dropdown-item">Founisseur d'équipements</a>
-                                    {# <a href="404.html" class="dropdown-item">404 Page</a> #}
+                                   {% for cat in categorie %}
+                                        <a href="{{path('prod_by_categorie', {'id': cat.id})}}" class="dropdown-item">{{ cat.nomCategorie}}</a>
+                                    {% endfor %}
+                                
                                 </div>
                             </div>
                             <div class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Partenaires</a>
+                                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Autres services</a>
                                 <div class="dropdown-menu m-0 bg-secondary rounded-0">
-                                    <a href="#" class="dropdown-item">les éleveurs</a>
-                                    <a href="#" class="dropdown-item">les cultivateurs</a>
-                                    <a href="testimonial.html" class="dropdown-item">les supermarchés</a>
-                                    <a href="404.html" class="dropdown-item">les transporteurs</a>
+                                  {% for serv in services %}
+                                    <a href="{{path('Prodservice_id', {'id':serv.id})}}" class="dropdown-item">{{ serv.designation }}</a>
+                                  {% endfor %}
                                 </div>
                             </div>
                             <a href="{{path("app_tableau")}}" class="nav-item nav-link">Admin</a>
