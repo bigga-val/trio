@@ -1,4 +1,5 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+     {{ form_row (form.nomCategorie, {attr:{'class':'form-control', 'placeholder':'designation'}}) }}
+      {{ form_row (form.active, {attr:{'class':'form-control', 'placeholder':'active'}}) }} </br>
+    <button class="btn btn-outline-info btn-block">{{ button_label|default('Enregistrer') }}</button> </br>
 {{ form_end(form) }}

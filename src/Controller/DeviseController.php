@@ -23,7 +23,7 @@ final class DeviseController extends AbstractController
     }
 
     #[Route('/new', name: 'app_devise_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, DeviseRepository $deviseRepository): Response
     {
         $devise = new Devise();
         $form = $this->createForm(DeviseType::class, $devise);
@@ -39,6 +39,7 @@ final class DeviseController extends AbstractController
         return $this->render('devise/new.html.twig', [
             'devise' => $devise,
             'form' => $form,
+            'devises' => $deviseRepository->findAll(),
         ]);
     }
 

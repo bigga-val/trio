@@ -52,7 +52,7 @@ class ProduitRepository extends ServiceEntityRepository
               WHERE c.nomCategorie=:nom
             )  order by p.nomProduit DESC
             ');
-            return $query->setParameter('nom','vehicule de lux')->setMaxResults(4)->getResult();
+            return $query->setParameter('nom','vehicules')->setMaxResults(4)->getResult();
       }
 
 

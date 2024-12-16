@@ -1,11 +1,66 @@
-{% extends 'base.html.twig' %}
 
-{% block title %}New CategorieVehicule{% endblock %}
+{% include "extensions/navbarTab.html.twig" %}
 
-{% block body %}
-    <h1>Create new CategorieVehicule</h1>
-
-    {{ include('categorie_vehicule/_form.html.twig') }}
-
-    <a href="{{ path('app_categorie_vehicule_index') }}">back to list</a>
-{% endblock %}
+<div class="content-wrapper">
+    <section class="content">
+          <div class="container-fluid">
+            <div class="row">
+              <!-- left column -->
+              <div class="col-md-2">
+              </div>
+              <div class="col-md-12">
+                <!-- general form elements -->
+                <div class="card card-primary">
+                  <div class="card-header">
+                    <h3 class="card-title">Ajouter la devise</h3>
+                  </div>
+                  <!-- /.card-header -->
+                  <!-- form start -->
+                 
+                      <div class="row">
+                            <div class="col-md-5"> 
+                              {{ form_start(form)}}
+                                      {{ include('categorie_vehicule/_form.html.twig') }} 
+                                    {# <button type="submit" class="btn btn-success btn-block">Enregistrer</button><br>          #}
+                              {{ form_end(form) }}
+                             <a href="{{ path('app_categorie_vehicule_index') }}" class="btn btn-sm btn-primary btn-block">back to list</a>     
+                            </div>
+                       
+                          <div class="col-md-6"> <br>
+                                <table class="table"> 
+                                         <thead>
+                                            <tr>
+                                                <th>Id</th>
+                                                <th>NomCategorie</th>
+                                                <th>Active</th>
+                                                <th>actions</th>
+                                            </tr>
+                                        </thead>
+                                         <tbody>
+                                            {% for categorie_vehicule in categorieVehicule %}
+                                                <tr>
+                                                    <td>{{ categorie_vehicule.id }}</td>
+                                                    <td>{{ categorie_vehicule.nomCategorie }}</td>
+                                                    <td>{{ categorie_vehicule.active ? 'Yes' : 'No' }}</td>
+                                                    <td>
+                                                        <a href="{{ path('app_categorie_vehicule_show', {'id': categorie_vehicule.id}) }}">show</a>
+                                                        <a href="{{ path('app_categorie_vehicule_edit', {'id': categorie_vehicule.id}) }}">edit</a>
+                                                    </td>
+                                                </tr>
+                                            {% else %}
+                                                <tr>
+                                                    <td colspan="4">no records found</td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                </table>
+                          </div>
+                    
+                    </div>
+                 
+                </div>
+              </div>
+           </div>
+         </div>
+    </section>
+    </div>

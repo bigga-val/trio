@@ -36,10 +36,12 @@
             <div class="col-md-12 col-lg-5">
                 <div id="carouselId" class="carousel slide position-relative" data-bs-ride="carousel">
                     <div class="carousel-inner" role="listbox">
+                      {% for list in autreServe %}
                         <div class="carousel-item active rounded">
-                            <img src="img/v3.jpg" class="img-fluid w-100 h-100 bg-secondary rounded" alt="First slide">
-                            <a href="#" class="btn px-4 py-2 text-white rounded">Yuday</a>
+                            <img src="" class="img-fluid w-100 h-100 bg-secondary rounded" alt="First slide">
+                            <a href="{{path('Prodservice_id', {'id': list.id})}}" class="btn px-4 py-2 text-white rounded">{{list.designation}}</a>
                         </div>
+                        {% endfor %}
                         <div class="carousel-item rounded">
                             <img src="img/v2.jpg" class="img-fluid w-100 h-100 rounded" alt="Second slide">
                             <a href="#" class="btn px-4 py-2 text-white rounded">nissan</a>
@@ -81,11 +83,13 @@
                                 <span class="text-dark" style="width: 130px;">Tous les  Products</span>
                             </a>
                         </li>
+                       {% for autre in autreServe %}
                         <li class="nav-item">
                             <a class="d-flex py-2 m-2 bg-light rounded-pill" data-bs-toggle="pill" href="#tab-2">
-                                <span class="text-dark" style="width: 130px;">vente des vehicules</span>
+                                <span class="text-dark" style="width: 130px;">{{ autre.designation }}</span>
                             </a>
                         </li>
+                        {%  endfor %}
                         <li class="nav-item">
                             <a class="d-flex m-2 py-2 bg-light rounded-pill" data-bs-toggle="pill" href="#tab-3">
                                 <span class="text-dark" style="width: 130px;">Importation</span>

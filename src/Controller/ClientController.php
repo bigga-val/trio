@@ -8,6 +8,7 @@ use App\Repository\CategorieVehiculeRepository;
 use App\Entity\Produit;
 use App\Form\ClientType;
 use App\Repository\ClientRepository;
+use App\Repository\ServicesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,15 +19,19 @@ use Symfony\Component\Routing\Attribute\Route;
 final class ClientController extends AbstractController
 {
     #[Route(name: 'app_client_index', methods: ['GET'])]
-    public function index(ClientRepository $clientRepository): Response
+    public function index(ClientRepository $clientRepository, ServicesRepository $servicesRepository): Response
     {
         return $this->render('client/index.html.twig', [
             'clients' => $clientRepository->findAll(),
+            'autreServe'=>$servicesRepository->findAll(),
+            'services'=>$servicesRepository->findAll(),  
+
         ]);
     }
 
     #[Route('/new', name: 'app_client_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, CategorieVehiculeRepository $categorieVehiculeRepository): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, 
+    CategorieVehiculeRepository $categorieVehiculeRepository, ServicesRepository $servicesRepository): Response
     {
         $client = new Client();
         $form = $this->createForm(ClientType::class, $client);
@@ -43,6 +48,9 @@ final class ClientController extends AbstractController
             'client' => $client,
             'form' => $form,
             'categorie'=>$categorieVehiculeRepository->findAll(),
+            'autreServe'=>$servicesRepository->findAll(),
+            'services'=>$servicesRepository->findAll(),  
+
         ]);
     }
 

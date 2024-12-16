@@ -1,11 +1,65 @@
-{% extends 'base.html.twig' %}
 
-{% block title %}New Devise{% endblock %}
+{% include "extensions/navbarTab.html.twig" %}
 
-{% block body %}
-    <h1>Create new Devise</h1>
-
-    {{ include('devise/_form.html.twig') }}
-
-    <a href="{{ path('app_devise_index') }}">back to list</a>
-{% endblock %}
+<div class="content-wrapper">
+    <section class="content">
+          <div class="container-fluid">
+            <div class="row">
+              <!-- left column -->
+              <div class="col-md-2">
+              </div>
+              <div class="col-md-12">
+                <!-- general form elements -->
+                <div class="card card-primary">
+                  <div class="card-header">
+                    <h3 class="card-title">Ajouter la devise</h3>
+                  </div>
+                  <!-- /.card-header -->
+                  <!-- form start -->
+                 
+                      <div class="row">
+                            <div class="col-md-5"> 
+                              {{ form_start(form)}}
+                                    {{ include('devise/_form.html.twig') }}
+                                    <button type="submit" class="btn btn-success btn-block">Enregistrer</button><br>           
+                              {{ form_end(form) }}
+                             <a href="{{ path('app_services_index') }}" class="btn btn-sm btn-primary btn-block">Liste des vehicules</a><br>
+                            </div>
+                       
+                          <div class="col-md-6"> <br>
+                                <table class="table"> 
+                                        <thead class="bg-info">
+                                            <tr class=" text-center">
+                                                <th>#</th>
+                                                <th>Designation</th>
+                                                <th>actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for devise in devises %}
+                                                <tr class="text-center">
+                                                    <td>{{ devise.id }}</td>
+                                                    <td>{{ devise.designation }}</td>
+                                                    <td>
+                                                        <a href="{{ path('app_devise_show', {'id': devise.id}) }}" class="btn btn-outline-primary">show</a>
+                                                        <a href="{{ path('app_devise_edit', {'id': devise.id}) }}" class="btn btn-outline-warning">edit</a>
+                                                        <a href="{{ path('app_devise_index') }}" class="btn btn-outline-secondary">back to list</a>
+                                                    </td>
+                                                </tr>
+                                            {% else %}
+                                                <tr>
+                                                    <td colspan="3">no records found</td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                </table>
+                          </div>
+                    
+                    </div>
+                 
+                </div>
+              </div>
+           </div>
+         </div>
+    </section>
+    </div>

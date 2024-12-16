@@ -26,6 +26,7 @@ class HomeController extends AbstractController
             'topIntrant'=> $produitRepository->getIndexForIntrants(),
             'categorie'=>$categorieVehiculeRepository->findAll(),
             'services'=>$servicesRepository->findAll(),  
+            'autreServe'=>$servicesRepository->findAll(),
            
         ]);
     }
@@ -126,7 +127,7 @@ class HomeController extends AbstractController
     public function ServiceProdById(Request $request, ServicesRepository $servicesRepository,
     ProduitRepository $produitRepository, CategorieVehiculeRepository $categorieVehiculeRepository){
      $service = $request->get('id');
-     $serviceProuit = $produitRepository->findBy(['service'=>$service]);
+     $serviceProuit = $produitRepository->findBy(['services'=>$service]);
     //  dd($service);
      return $this->render('services/services.html.twig',[
         'categorie'=>$categorieVehiculeRepository->findAll(),

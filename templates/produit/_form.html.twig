@@ -1,4 +1,44 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+        <div class="row">
+              <div class="col-md-4"> 
+                    <div class="form-group"> <br>
+                      {{ form_widget(form.nomProduit, {'attr': {'class': 'form-control', 'required':'required'}}) }}
+                    </div>
+                    <div class="form-group">
+                      {{ form_widget(form.prixProduit, {'attr': {'class': 'form-control', 'required':'required'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_widget(form.descrition, {'attr': {'class': 'form-control', 'required':'required'}}) }}
+                    </div>
+                    <button type="submit" class="btn btn-success btn-block">{{ button_label|default('Save') }}</button><br>
+               </div>
+                <div class="col-md-4"> <br>
+                      <div class="form-group">
+                          {{ form_widget(form.localisation, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="form-group">
+                          {{ form_widget(form.createdBy, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_widget(form.ceatedAt, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                      <a href="{{ path('app_produit_index') }}" class="btn btn-sm btn-primary btn-block">Liste des vehicules</a><br>
+                 </div>
+                <div class="col-md-4">
+                        <div class="form-group">
+                        <label for="exampleInputPassword1">Categorie</label>
+                        {{ form_widget(form.categorie, {'attr': {'class': 'form-control', 'required':'required'}}) }}
+                      </div>
+                      
+                      <div class="form-group">
+                        {# <label for="exampleInputPassword1">image </label> #}
+                          {{ form_widget(form.ImageProduit, {'attr': {'class': 'form-control'}}) }}
+                      </div>
+                        <div class="form-group">
+                            {{ form_widget(form.devise, {'attr': {'class': 'form-control'}}) }}
+                      </div>
+                </div>
+             </div>
+        </div>
+       
 {{ form_end(form) }}

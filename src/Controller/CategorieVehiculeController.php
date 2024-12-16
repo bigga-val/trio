@@ -24,7 +24,7 @@ final class CategorieVehiculeController extends AbstractController
 
 
     #[Route('/new', name: 'app_categorie_vehicule_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, CategorieVehiculeRepository $categorieVehiculeRepository): Response
     {
         $categorieVehicule = new CategorieVehicule();
         $form = $this->createForm(CategorieVehiculeType::class, $categorieVehicule);
@@ -40,6 +40,7 @@ final class CategorieVehiculeController extends AbstractController
         return $this->render('categorie_vehicule/new.html.twig', [
             'categorie_vehicule' => $categorieVehicule,
             'form' => $form,
+            'categorieVehicule' => $categorieVehiculeRepository->findAll(),
         ]);
     }
 

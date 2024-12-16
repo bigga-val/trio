@@ -1,12 +1,25 @@
-{% extends 'base.html.twig' %}
+{% include "extensions/navbarTab.html.twig" %}
 
-{% block title %}Client index{% endblock %}
-
-{% block body %}
-    <h1>Client index</h1>
-
-    <table class="table">
-        <thead>
+<div class="content-wrapper">
+    <section class="content">
+    <div class="container-fluid">
+    <div class="row">
+        <!-- left column -->
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-12">
+        <!-- general form elements -->
+        <div class="card card-primary">
+            {# <div class="card-header">
+            <h3 class="card-title">Ajouter un service</h3>
+            </div> #}
+            <!-- /.card-header -->
+            <!-- form start -->
+            
+<div class="row">
+ <div class="col-md-12"> <br>
+   <table class="table  bg-blue-sky"> 
+        <thead class="table  bg-blue">
             <tr>
                 <th>Id</th>
                 <th>NomClient</th>
@@ -17,27 +30,29 @@
                 <th>actions</th>
             </tr>
         </thead>
-        <tbody>
-        {% for client in clients %}
-            <tr>
-                <td>{{ client.id }}</td>
-                <td>{{ client.nomClient }}</td>
-                <td>{{ client.adresseClient }}</td>
-                <td>{{ client.telephone }}</td>
-                <td>{{ client.villeResidance }}</td>
-                <td>{{ client.adresseEmail }}</td>
-                <td>
-                    <a href="{{ path('app_client_show', {'id': client.id}) }}">show</a>
-                    <a href="{{ path('app_client_edit', {'id': client.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="7">no records found</td>
-            </tr>
-        {% endfor %}
+         <tbody>
+            {% for categorie_vehicule in categorie_vehicules %}
+                <tr>
+                    <td>{{ categorie_vehicule.id }}</td>
+                    <td>{{ categorie_vehicule.nomCategorie }}</td>
+                    <td>{{ categorie_vehicule.active ? 'Yes' : 'No' }}</td>
+                    <td>
+                        <a href="{{ path('app_categorie_vehicule_show', {'id': categorie_vehicule.id}) }}">show</a>
+                        <a href="{{ path('app_categorie_vehicule_edit', {'id': categorie_vehicule.id}) }}">edit</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">no records found</td>
+                </tr>
+            {% endfor %}
         </tbody>
-    </table>
-
-    <a href="{{ path('app_client_new') }}">Create new</a>
-{% endblock %}
+     </table>
+       </div>
+    </div>     
+   </div>
+</div>
+    </div>
+    </div>
+</section>
+ </div>
