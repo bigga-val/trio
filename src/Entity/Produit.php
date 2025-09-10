@@ -43,7 +43,7 @@ class Produit
     private ?Devise $devise = null;
 
     #[ORM\ManyToOne(inversedBy: 'produits')]
-    private ?Services $service = null;
+    private ?Services $services = null;
 
    
 
@@ -163,12 +163,12 @@ class Produit
 
     public function getService(): ?Services
     {
-        return $this->service;
+        return $this->services;
     }
 
     public function setService(?Services $service): static
     {
-        $this->service = $service;
+        $this->services = $service;
 
         return $this;
     }
