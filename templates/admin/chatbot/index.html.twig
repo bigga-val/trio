@@ -1,0 +1,130 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Administration Chatbot - TrioBusiness{% endblock %}
+
+{% block body %}
+<div class="container-fluid mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h4 class="mb-0">🤖 Administration du Chatbot</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card border-primary">
+                                <div class="card-header bg-primary text-white">
+                                    <h5 class="mb-0">📊 Statistiques</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="text-center">
+                                                <h3 class="text-primary">{{ stats.total_responses }}</h3>
+                                                <p class="text-muted">Réponses configurées</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="text-center">
+                                                <h3 class="text-success">{{ stats.categories|length }}</h3>
+                                                <p class="text-muted">Catégories</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card border-success">
+                                <div class="card-header bg-success text-white">
+                                    <h5 class="mb-0">⚙️ Actions</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-grid gap-2">
+                                        <a href="{{ path('app_chatbot_test') }}" class="btn btn-outline-primary">
+                                            <i class="fa fa-flask"></i> Tester le Chatbot
+                                        </a>
+                                        <a href="{{ path('app_chat_admin') }}" class="btn btn-outline-info">
+                                            <i class="fa fa-comments"></i> Voir les Conversations
+                                        </a>
+                                        <button class="btn btn-outline-warning" disabled>
+                                            <i class="fa fa-cogs"></i> Configurer (Bientôt disponible)
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-md-12">
+                            <div class="card border-info">
+                                <div class="card-header bg-info text-white">
+                                    <h5 class="mb-0">📋 Catégories de réponses</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        {% for category in stats.categories %}
+                                            <div class="col-md-4 mb-3">
+                                                <div class="card h-100">
+                                                    <div class="card-body text-center">
+                                                        <h6 class="card-title text-capitalize">
+                                                            {% if category == 'greetings' %}👋 Salutations{% endif %}
+                                                            {% if category == 'thanks' %}🙏 Remerciements{% endif %}
+                                                            {% if category == 'goodbye' %}👋 Au revoir{% endif %}
+                                                            {% if category == 'price' %}💰 Prix{% endif %}
+                                                            {% if category == 'availability' %}📦 Disponibilité{% endif %}
+                                                            {% if category == 'order' %}🛒 Commandes{% endif %}
+                                                            {% if category == 'contact' %}📞 Contact{% endif %}
+                                                            {% if category == 'products' %}🌱 Produits{% endif %}
+                                                            {% if category == 'help' %}❓ Aide{% endif %}
+                                                            {% if category == 'fallback' %}🔄 Défaut{% endif %}
+                                                        </h6>
+                                                        <span class="badge bg-primary">{{ category }}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-md-12">
+                            <div class="card border-warning">
+                                <div class="card-header bg-warning text-dark">
+                                    <h5 class="mb-0">ℹ️ Informations</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="alert alert-info">
+                                        <h6><i class="fa fa-info-circle"></i> Fonctionnement du Chatbot</h6>
+                                        <ul class="mb-0">
+                                            <li>Le chatbot répond automatiquement aux questions simples des clients</li>
+                                            <li>Les questions complexes sont automatiquement transférées aux conseillers humains</li>
+                                            <li>Le système apprend en continu des interactions pour s'améliorer</li>
+                                            <li>Disponible 24/7 pour les clients</li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="alert alert-success">
+                                        <h6><i class="fa fa-check-circle"></i> Avantages</h6>
+                                        <ul class="mb-0">
+                                            <li>🔄 Réduction de la charge de travail des conseillers</li>
+                                            <li>⚡ Réponses instantanées pour les clients</li>
+                                            <li>📈 Amélioration de la satisfaction client</li>
+                                            <li>💰 Économies sur les coûts de support</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

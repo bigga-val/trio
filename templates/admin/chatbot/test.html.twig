@@ -1,0 +1,136 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Test du Chatbot - TrioBusiness{% endblock %}
+
+{% block body %}
+<div class="container-fluid mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">🧪 Test du Chatbot</h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <i class="fa fa-info-circle"></i>
+                        Testez les réponses du chatbot en entrant différents types de messages.
+                        Le système vous indiquera si une intervention humaine est nécessaire.
+                    </div>
+
+                    <form method="post" class="mb-4">
+                        <div class="mb-3">
+                            <label for="message" class="form-label">Message de test :</label>
+                            <textarea
+                                class="form-control"
+                                id="message"
+                                name="message"
+                                rows="3"
+                                placeholder="Entrez un message que pourrait envoyer un client..."
+                                required
+                            >{{ testMessage }}</textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa fa-send"></i> Tester la réponse
+                        </button>
+                        <a href="{{ path('app_chatbot_index') }}" class="btn btn-secondary ms-2">
+                            <i class="fa fa-arrow-left"></i> Retour
+                        </a>
+                    </form>
+
+                    {% if testMessage is not empty %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card border-primary">
+                                    <div class="card-header bg-primary text-white">
+                                        <h6 class="mb-0">💬 Message du client</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-end">
+                                            <div class="bg-primary text-white p-3 rounded" style="max-width: 80%; border-radius: 15px;">
+                                                <p class="mb-0">{{ testMessage }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="card border-info">
+                                    <div class="card-header bg-info text-white">
+                                        <h6 class="mb-0">🤖 Réponse du Chatbot</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-start">
+                                            <div class="bg-info text-white p-3 rounded" style="max-width: 80%; border-radius: 15px;">
+                                                <p class="mb-0" style="white-space: pre-line;">{{ response }}</p>
+                                            </div>
+                                        </div>
+
+                                        {% if needsHuman %}
+                                            <div class="alert alert-warning mt-3">
+                                                <i class="fa fa-exclamation-triangle"></i>
+                                                <strong>Intervention humaine requise</strong><br>
+                                                Ce message nécessite l'attention d'un conseiller humain.
+                                            </div>
+                                        {% else %}
+                                            <div class="alert alert-success mt-3">
+                                                <i class="fa fa-check-circle"></i>
+                                                <strong>Réponse automatique</strong><br>
+                                                Le chatbot peut gérer ce type de message.
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <h5>💡 Suggestions de test :</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="list-group">
+                                        <button type="button" class="list-group-item list-group-item-action test-suggestion" data-message="Bonjour, pouvez-vous me donner les prix de vos produits ?">
+                                            💰 "Bonjour, pouvez-vous me donner les prix de vos produits ?"
+                                        </button>
+                                        <button type="button" class="list-group-item list-group-item-action test-suggestion" data-message="Comment passer une commande ?">
+                                            🛒 "Comment passer une commande ?"
+                                        </button>
+                                        <button type="button" class="list-group-item list-group-item-action test-suggestion" data-message="Vos coordonnées de contact ?">
+                                            📞 "Vos coordonnées de contact ?"
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="list-group">
+                                        <button type="button" class="list-group-item list-group-item-action test-suggestion" data-message="J'ai un problème avec ma commande précédente">
+                                            ⚠️ "J'ai un problème avec ma commande précédente"
+                                        </button>
+                                        <button type="button" class="list-group-item list-group-item-action test-suggestion" data-message="Merci pour votre aide">
+                                            🙏 "Merci pour votre aide"
+                                        </button>
+                                        <button type="button" class="list-group-item list-group-item-action test-suggestion" data-message="Quelle est la disponibilité du DAP ?">
+                                            📦 "Quelle est la disponibilité du DAP ?"
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Gestionnaire pour les suggestions de test
+    document.querySelectorAll('.test-suggestion').forEach(button => {
+        button.addEventListener('click', function() {
+            const message = this.dataset.message;
+            document.getElementById('message').value = message;
+        });
+    });
+});
+</script>
+{% endblock %}

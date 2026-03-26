@@ -1,0 +1,398 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Chat - Service Client{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <!-- Alerte d'inactivité -->
+            <div id="inactivityAlert" class="alert alert-warning alert-dismissible fade show d-none" role="alert">
+                <strong>Attention !</strong> Votre session expirera dans <span id="countdownTimer">5:00</span> minutes. Bougez la souris pour maintenir votre session.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">💬 Chat avec le Service Client</h4>
+                </div>
+
+                <!-- Zone de messages -->
+                <div class="card-body" style="height: 500px; overflow-y: auto; background-color: #f8f9fa;">
+                    {% if messages is empty %}
+                        <div class="text-center text-muted py-5">
+                            <p>Aucun message pour le moment. Commencez la conversation!</p>
+                        </div>
+                    {% else %}
+                        {% for msg in messages %}
+                            <div class="mb-3" id="message-{{ msg.id }}">
+                                {% if msg.isFromClient %}
+                                    <!-- Message du client (à droite) -->
+                                    <div class="d-flex justify-content-end align-items-start gap-2">
+                                        <div class="bg-primary text-white p-3 rounded" style="max-width: 70%; border-radius: 15px;">
+                                            <small class="d-block text-white-50">{{ msg.nomAuteur }}</small>
+                                            <p class="mb-0">{{ msg.contenu }}</p>
+                                            <small class="d-block text-white-50 mt-1">
+                                                {{ msg.createdAt|date('H:i') }}
+                                            </small>
+                                        </div>
+                                        <!-- Boutons d'action pour le client -->
+                                        <div class="btn-group-vertical btn-group-sm">
+                                            <button type="button" class="btn btn-sm btn-outline-primary edit-btn" data-message-id="{{ msg.id }}" data-content="{{ msg.contenu }}" title="Modifier">
+                                                <i class="fa fa-edit"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-outline-danger delete-btn" data-message-id="{{ msg.id }}" title="Supprimer">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <!-- Message du service client (à gauche) -->
+                                    <div class="d-flex justify-content-start align-items-start gap-2">
+                                        <div class="bg-light p-3 rounded" style="max-width: 70%; border-radius: 15px;">
+                                            <small class="d-block text-secondary"><strong>{{ msg.nomAuteur }}</strong></small>
+                                            <p class="mb-0">{{ msg.contenu }}</p>
+                                            <small class="d-block text-muted mt-1">
+                                                {{ msg.createdAt|date('H:i') }}
+                                            </small>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <!-- Zone d'envoi de message -->
+                <div class="card-footer bg-light">
+                    <form id="chatForm" method="POST">
+                        <div class="input-group">
+                            <input type="text" id="messageInput" class="form-control" placeholder="Tapez votre message..." required>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-paper-plane"></i> Envoyer
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Bouton retour -->
+            <div class="mt-3">
+                <a href="{{ path('app_home') }}" class="btn btn-secondary">
+                    <i class="fa fa-arrow-left"></i> Retour
+                </a>
+                <a href="{{ path('logout') }}" class="btn btn-danger">
+                    <i class="fa fa-sign-out"></i> Se déconnecter
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Auto-scroll vers le bas des messages
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Chat script loaded');
+        const chatBody = document.querySelector('.card-body');
+        const chatForm = document.getElementById('chatForm');
+        const messageInput = document.getElementById('messageInput');
+
+        console.log('Chat form:', chatForm);
+        console.log('Message input:', messageInput);
+        console.log('Chat body:', chatBody);
+
+        function scrollToBottom() {
+            if (chatBody) {
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }
+        }
+
+        function addMessageToDOM(msg) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'mb-3';
+            messageDiv.id = 'message-' + msg.id;
+            
+            if (msg.isFromClient) {
+                // Message du client (à droite)
+                messageDiv.innerHTML = `
+                    <div class="d-flex justify-content-end align-items-start gap-2">
+                        <div class="bg-primary text-white p-3 rounded" style="max-width: 70%; border-radius: 15px;">
+                            <small class="d-block text-white-50">${msg.nomAuteur}</small>
+                            <p class="mb-0">${msg.contenu}</p>
+                            <small class="d-block text-white-50 mt-1">${msg.createdAt}</small>
+                        </div>
+                        <div class="btn-group-vertical btn-group-sm">
+                            <button type="button" class="btn btn-sm btn-outline-primary edit-btn" data-message-id="${msg.id}" data-content="${msg.contenu}" title="Modifier">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                            <button type="button" class="btn btn-sm btn-outline-danger delete-btn" data-message-id="${msg.id}" title="Supprimer">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // Message du bot/service client (à gauche)
+                const isBot = msg.nomAuteur.includes('🤖') || msg.nomAuteur.includes('Assistant');
+                const bgColor = isBot ? 'bg-info' : 'bg-light';
+                const textColor = isBot ? 'text-white' : 'text-secondary';
+                
+                messageDiv.innerHTML = `
+                    <div class="d-flex justify-content-start align-items-start gap-2">
+                        <div class="${bgColor} p-3 rounded" style="max-width: 70%; border-radius: 15px;">
+                            <small class="d-block ${textColor}"><strong>${msg.nomAuteur}</strong></small>
+                            <p class="mb-0">${msg.contenu.replace(/\n/g, '<br>')}</p>
+                            <small class="d-block ${textColor} mt-1">${msg.createdAt}</small>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Si pas de messages encore, supprimer le message d'aucun message
+            const noMessagesDiv = document.querySelector('.text-center.text-muted.py-5');
+            if (noMessagesDiv) {
+                noMessagesDiv.remove();
+            }
+            
+            chatBody.appendChild(messageDiv);
+            
+            // Ajouter les gestionnaires pour la modification et suppression du nouveau message (seulement pour les messages client)
+            if (msg.isFromClient) {
+                addMessageHandlers(messageDiv);
+            }
+            
+            // Scroll to bottom après ajout du message
+            scrollToBottom();
+        }
+
+        function addMessageHandlers(container) {
+            const editBtn = container.querySelector('.edit-btn');
+            const deleteBtn = container.querySelector('.delete-btn');
+            
+            if (editBtn) {
+                editBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const messageId = this.dataset.messageId;
+                    const currentContent = this.dataset.content;
+                    const newContent = prompt('Modifier votre message:', currentContent);
+                    
+                    if (newContent !== null && newContent.trim() !== '') {
+                        editMessage(messageId, newContent);
+                    }
+                });
+            }
+            
+            if (deleteBtn) {
+                deleteBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const messageId = this.dataset.messageId;
+                    
+                    if (confirm('Êtes-vous sûr de vouloir supprimer ce message ?')) {
+                        deleteMessage(messageId);
+                    }
+                });
+            }
+        }
+
+        // Tracker l'inactivité et envoyer des pings au serveur
+        let inactivityTimer;
+        let countdownInterval;
+        const INACTIVITY_TIMEOUT = 5 * 60 * 1000; // 5 minutes en millisecondes
+        const WARNING_TIME = 1 * 60 * 1000; // Afficher l'alerte 1 minute avant expiration
+        const PING_INTERVAL = 30 * 1000; // Ping toutes les 30 secondes
+
+        function formatTime(ms) {
+            const totalSeconds = Math.floor(ms / 1000);
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function startCountdown(remainingTime) {
+            const alertBox = document.getElementById('inactivityAlert');
+            const timer = document.getElementById('countdownTimer');
+            
+            if (alertBox) {
+                alertBox.classList.remove('d-none');
+            }
+            
+            clearInterval(countdownInterval);
+            countdownInterval = setInterval(() => {
+                remainingTime -= 1000;
+                if (remainingTime <= 0) {
+                    clearInterval(countdownInterval);
+                    window.location.href = '/logout';
+                } else {
+                    if (timer) {
+                        timer.textContent = formatTime(remainingTime);
+                    }
+                }
+            }, 1000);
+        }
+
+        function resetInactivityTimer() {
+            clearTimeout(inactivityTimer);
+            clearInterval(countdownInterval);
+            const alertBox = document.getElementById('inactivityAlert');
+            if (alertBox) {
+                alertBox.classList.add('d-none');
+            }
+            
+            sendKeepAlive();
+            
+            inactivityTimer = setTimeout(() => {
+                console.log('Session expirée due to inactivity');
+                window.location.href = '/logout';
+            }, INACTIVITY_TIMEOUT);
+
+            // Afficher l'alerte avant expiration
+            setTimeout(() => {
+                startCountdown(WARNING_TIME);
+            }, INACTIVITY_TIMEOUT - WARNING_TIME);
+        }
+
+        function sendKeepAlive() {
+            fetch('{{ path("app_keep_alive") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            }).catch(err => console.error('Keep-alive error:', err));
+        }
+
+        // Gestionnaire pour l'envoi de message avec AJAX
+        if (chatForm) {
+            console.log('Attaching submit handler to chatForm');
+            chatForm.addEventListener('submit', async function(e) {
+                console.log('Form submitted');
+                e.preventDefault();
+                
+                const messageText = messageInput.value.trim();
+                console.log('Message text:', messageText);
+                
+                if (!messageText) {
+                    console.log('Empty message, returning');
+                    return;
+                }
+                
+                // Désactiver le bouton pendant l'envoi
+                const submitBtn = chatForm.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.disabled = true;
+                
+                try {
+                    console.log('Sending message:', messageText);
+                    const response = await fetch('{{ path("app_send_message") }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: new URLSearchParams({
+                            'contenu': messageText
+                        })
+                    });
+                    
+                    console.log('Response status:', response.status);
+                    const data = await response.json();
+                    console.log('Response data:', data);
+                    
+                    if (data.success) {
+                        console.log('Message sent successfully');
+                        // Ajouter tous les messages retournés (utilisateur + bot)
+                        if (data.messages && Array.isArray(data.messages)) {
+                            data.messages.forEach(msg => addMessageToDOM(msg));
+                        } else if (data.message) {
+                            // Fallback pour compatibilité
+                            addMessageToDOM(data.message);
+                        }
+                        
+                        // Effacer le champ d'entrée
+                        messageInput.value = '';
+                        messageInput.focus();
+                    } else {
+                        console.error('Server error:', data.error);
+                        alert('Erreur: ' + (data.error || 'Impossible d\'envoyer le message'));
+                    }
+                } catch (err) {
+                    console.error('Error sending message:', err);
+                    alert('Erreur lors de l\'envoi du message: ' + err.message);
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                }
+            });
+        } else {
+            console.error('Chat form not found!');
+        }
+
+        // Events à tracker
+        const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
+        
+        events.forEach(event => {
+            document.addEventListener(event, resetInactivityTimer, true);
+        });
+
+        function editMessage(messageId, content) {
+            const tokenInput = document.querySelector('input[name*="_token"]');
+            const token = tokenInput ? tokenInput.value : '';
+            
+            fetch(`{{ path('app_message_edit', {'id': 'ID'}) }}`.replace('ID', messageId), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: new URLSearchParams({
+                    'content': content,
+                    '_token': token
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert('Erreur: ' + (data.error || 'Impossible de modifier le message'));
+                }
+            })
+            .catch(err => console.error('Error:', err));
+        }
+
+        function deleteMessage(messageId) {
+            const tokenInput = document.querySelector('input[name*="_token"]');
+            const token = tokenInput ? tokenInput.value : '';
+            
+            fetch(`{{ path('app_message_delete', {'id': 'ID'}) }}`.replace('ID', messageId), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: new URLSearchParams({
+                    '_token': token
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('message-' + messageId).remove();
+                } else {
+                    alert('Erreur: ' + (data.error || 'Impossible de supprimer le message'));
+                }
+            })
+            .catch(err => console.error('Error:', err));
+        }
+
+        // Initialiser le visionnage des messages et scroll
+        scrollToBottom();
+        
+        // Initialiser le timer d'inactivité
+        resetInactivityTimer();
+
+        // Faire un ping régulier même sans activité
+        setInterval(sendKeepAlive, PING_INTERVAL);
+    });
+</script>
+{% endblock %}

@@ -31,17 +31,20 @@
             </tr>
         </thead>
          <tbody>
-            {% for categorie_vehicule in categorie_vehicules %}
+            {% for categorie_vehicule in clients %}
                 <tr>
                     <td>{{ categorie_vehicule.id }}</td>
-                    <td>{{ categorie_vehicule.nomCategorie }}</td>
-                    <td>{{ categorie_vehicule.active ? 'Yes' : 'No' }}</td>
+                    <td>{{ categorie_vehicule.nomClient }}</td>
+                    <td>{{ categorie_vehicule.adresseClient }}</td>
+                    <td>{{ categorie_vehicule.telephone }}</td>
+                    <td>{{ categorie_vehicule.villeResidance }}</td>
+                    <td>{{ categorie_vehicule.adresseEmail }}</td>
                     <td>
-                        <a href="{{ path('app_categorie_vehicule_show', {'id': categorie_vehicule.id}) }}">show</a>
-                        <a href="{{ path('app_categorie_vehicule_edit', {'id': categorie_vehicule.id}) }}">edit</a>
+                        <a href="{{ path('app_client_show', {'id': categorie_vehicule.id}) }}">show</a>
+                        <a href="{{ path('app_client_edit', {'id': categorie_vehicule.id}) }}">edit</a>
                     </td>
                 </tr>
-            {% else %}
+             {% else %}
                 <tr>
                     <td colspan="4">no records found</td>
                 </tr>

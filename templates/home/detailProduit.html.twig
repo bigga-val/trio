@@ -40,8 +40,26 @@
                             <div class="col-lg-6">
                                 <div class="border rounded">
                                     <a href="#">
-                                        <img src="{{ prod.ImageProduit}}" heigth="400"  class="img-fluid rounded" alt="Image">
+                                            <img src="{{ prod.ImageProduit}}" heigth="400"  class="img-fluid rounded" alt="Image">
                                     </a>
+                                </div>
+                                {# Thumbnails under main image #}
+                                {% set images = prod.getImages() is defined ? prod.getImages() : [] %}
+                                {% if images|length > 0 %}
+                                    <div class="d-flex flex-wrap gap-2 mt-2">
+                                        {% for img in images %}
+                                            <div style="width:80px;">
+                                                <a href="{{ img.getFilename() }}" target="_blank">
+                                                    <img src="{{ img.getFilename() }}" class="img-thumbnail" style="width:100%; height:60px; object-fit:cover;">
+                                                </a>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+
+                                {# Contact button below thumbnails (also present on right) #}
+                                <div class="mt-3">
+                                    <a href="{{ path('app_client_new') }}" class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i>ENTREZ EN CONTACT</a>
                                 </div>
                             </div>
                             <div class="col-lg-6">
@@ -85,11 +103,10 @@
                                 </nav>
                                 <div class="tab-content mb-5">
                                     <div class="tab-pane active" id="nav-about" role="tabpanel" aria-labelledby="nav-about-tab">
-                                        <p>Ces engrais sont riches en phosphore, qui est essentiel pour le développement des racines, la floraison et la production de fruits. Le superphosphate,
-                                             le phosphate diammonique (DAP) et le phosphate de roche sont des exemples d'engrais phosphatés.</p>
-                                        <p>Sabertooth peacock flounder; chain pickerel hatchetfish, pencilfish snailfish filefish Antarctic 
-                                            icefish goldeye aholehole trumpetfish pilot fish airbreathing catfish, electric ray sweeper.</p>
-                                       
+                                        {# <p> </p>
+                                        <p> snailfish filefish Antarctic 
+                                            catfish, electric ray sweeper.</p>
+                                        #}
                                     </div>
                                     <div class="tab-pane" id="nav-mission" role="tabpanel" aria-labelledby="nav-mission-tab">
                                         <div class="d-flex">

@@ -3,40 +3,49 @@
 {% block title %}Client{% endblock %}
 
 {% block body %}
-    <h1>Client</h1>
+    
+   <div class="row">
+          <div class="col-md-3">
+          </div>
+          <div class="col-md-6">
+          <h1>Client :  <td>{{ client.nomClient }}</td> </h1>
+                 <table class="table">
+                        <tbody>
+                            <tr>
+                                <th>Id</th>
+                                <td>{{ client.id }}</td>
+                            </tr>
+                            <tr>
+                                <th>NomClient</th>
+                                <td>{{ client.nomClient }}</td>
+                            </tr>
+                            <tr>
+                                <th>AdresseClient</th>
+                                <td>{{ client.adresseClient }}</td>
+                            </tr>
+                            <tr>
+                                <th>Telephone</th>
+                                <td>{{ client.telephone }}</td>
+                            </tr>
+                            <tr>
+                                <th>VilleResidance</th>
+                                <td>{{ client.villeResidance }}</td>
+                            </tr>
+                            <tr>
+                                <th>AdresseEmail</th>
+                                <td>{{ client.adresseEmail }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ client.id }}</td>
-            </tr>
-            <tr>
-                <th>NomClient</th>
-                <td>{{ client.nomClient }}</td>
-            </tr>
-            <tr>
-                <th>AdresseClient</th>
-                <td>{{ client.adresseClient }}</td>
-            </tr>
-            <tr>
-                <th>Telephone</th>
-                <td>{{ client.telephone }}</td>
-            </tr>
-            <tr>
-                <th>VilleResidance</th>
-                <td>{{ client.villeResidance }}</td>
-            </tr>
-            <tr>
-                <th>AdresseEmail</th>
-                <td>{{ client.adresseEmail }}</td>
-            </tr>
-        </tbody>
-    </table>
+                    <a href="{{ path('app_client_index') }}" class="btn btn-outline-info btn-block">back to list</a>
 
-    <a href="{{ path('app_client_index') }}">back to list</a>
+                    <a href="{{ path('app_client_edit', {'id': client.id}) }}" class="btn btn-outline-primary btn-block" >edit</a>
 
-    <a href="{{ path('app_client_edit', {'id': client.id}) }}">edit</a>
-
-    {{ include('client/_delete_form.html.twig') }}
+                    <a href="{{ include('client/_delete_form.html.twig') }} </a>
+          </div>
+          <div class="col-md-3">
+          </div>
+   </div> 
+    
 {% endblock %}

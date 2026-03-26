@@ -1,0 +1,145 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion Chat - Service Client{% endblock %}
+
+{% block body %}
+<div class="container-fluid mt-5">
+    <div class="row">
+        <!-- Liste des conversations -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">📋 Conversations</h5>
+                </div>
+                <div class="card-body" style="height: 600px; overflow-y: auto;">
+                    {% if conversations is empty %}
+                        <div class="text-center text-muted">
+                            <p>Aucune conversation pour le moment.</p>
+                        </div>
+                    {% else %}
+                        <div class="list-group">
+                            {% for conversation in conversations %}
+                                {% set clientName = conversation.nomAuteur ?? 'Client Anonyme' %}
+                                {% set clientId = conversation.client ? conversation.client.id : null %}
+                                {% set unreadCount = clientId ? unreadCounts[clientId] ?? 0 : unreadCounts[clientName] ?? 0 %}
+                                {% if clientName and clientName != 'null' %}
+                                {% if clientId %}
+                                    <a href="{{ path('app_chat_admin_conversation', {'id': clientId}) }}" 
+                                       class="list-group-item list-group-item-action {% if selectedClientId == clientId %}active{% endif %}">
+                                {% else %}
+                                    <a href="{{ path('app_chat_admin_conversation', {'name': clientName}) }}" 
+                                       class="list-group-item list-group-item-action {% if selectedClientName == clientName %}active{% endif %}">
+                                {% endif %}
+                                    <div class="d-flex w-100 justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="mb-1">{{ clientName }}</h6>
+                                            <p class="mb-1 text-truncate text-muted" style="max-width: 250px;">{{ conversation.contenu }}</p>
+                                        </div>
+                                        <div class="text-end">
+                                            {% if unreadCount > 0 %}
+                                                <span class="badge bg-danger">{{ unreadCount }}</span>
+                                            {% endif %}
+                                            <small class="d-block">{{ conversation.createdAt|date('d/m') }}</small>
+                                        </div>
+                                    </div>
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Conversation sélectionnée -->
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">💬 Conversation avec {{ selectedClientName ?? 'Client' }}</h5>
+                </div>
+
+                <!-- Messages -->
+                <div class="card-body" style="height: 500px; overflow-y: auto; background-color: #f8f9fa;">
+                    {% if selectedMessages is empty %}
+                        <div class="text-center text-muted py-5">
+                            <p>Sélectionnez une conversation ou aucun message n'existe.</p>
+                        </div>
+                    {% else %}
+                        {% for msg in selectedMessages %}
+                            <div class="mb-3">
+                                {% if msg.isFromClient %}
+                                    <!-- Message du client (à gauche) -->
+                                    <div class="d-flex justify-content-start">
+                                        <div class="bg-warning text-dark p-3 rounded" style="max-width: 70%; border-radius: 15px;">
+                                            <small class="d-block text-dark"><strong>{{ msg.nomAuteur }}</strong></small>
+                                            <p class="mb-0">{{ msg.contenu }}</p>
+                                            <small class="d-block text-muted mt-1">
+                                                {{ msg.createdAt|date('d/m H:i') }}
+                                            </small>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <!-- Message du service client (à droite) -->
+                                    <div class="d-flex justify-content-end">
+                                        <div class="bg-success text-white p-3 rounded {% if not msg.isRead %}border border-3 border-warning{% endif %}" style="max-width: 70%; border-radius: 15px;">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <small class="d-block text-white-50">Service Client</small>
+                                                {% if not msg.isRead %}
+                                                    <span class="badge bg-warning text-dark ms-2">Nouveau</span>
+                                                {% endif %}
+                                            </div>
+                                            <p class="mb-0">{{ msg.contenu }}</p>
+                                            <small class="d-block text-white-50 mt-1">
+                                                {{ msg.createdAt|date('d/m H:i') }}
+                                            </small>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <!-- Formulaire de réponse -->
+                {% if selectedMessages is not empty %}
+                <div class="card-footer bg-light">
+                    <form method="POST" action="{{ path('app_chat_admin_reply') }}">
+                        {% if selectedClientId %}
+                            <input type="hidden" name="client_id" value="{{ selectedClientId }}">
+                        {% endif %}
+                        {% if selectedClientName %}
+                            <input type="hidden" name="client_name" value="{{ selectedClientName }}">
+                        {% endif %}
+                        <div class="input-group">
+                            <textarea name="response" class="form-control" placeholder="Tapez votre réponse..." rows="3" required></textarea>
+                        </div>
+                        <div class="mt-2">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fa fa-paper-plane"></i> Envoyer la réponse
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Bouton retour -->
+            <div class="mt-3">
+                <a href="{{ path('app_admin_tableau') }}" class="btn btn-secondary">
+                    <i class="fa fa-arrow-left"></i> Retour
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Auto-scroll vers le bas des messages
+    document.addEventListener('DOMContentLoaded', function() {
+        const chatBody = document.querySelector('.card-body[style*="height: 500px"]');
+        if (chatBody) {
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+    });
+</script>
+{% endblock %}

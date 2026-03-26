@@ -5,6 +5,9 @@ namespace App\Entity;
 use App\Repository\ProduitRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use App\Entity\ProduitImage;
 
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
 class Produit
@@ -36,8 +39,11 @@ class Produit
     #[ORM\Column(length: 255)]
     private ?string $descrition = null;
 
-    #[ORM\Column(length:255)]
+    #[ORM\Column(length:255, nullable: true)]
     private $ImageProduit = null;
+
+    #[ORM\OneToMany(mappedBy: 'produit', targetEntity: ProduitImage::class, cascade: ['persist','remove'], orphanRemoval: true)]
+    private Collection $images;
 
     #[ORM\ManyToOne(inversedBy: 'produits')]
     private ?Devise $devise = null;
@@ -145,6 +151,40 @@ class Produit
     public function setImageProduit($imageProduit): static
     {
         $this->ImageProduit = $imageProduit;
+
+        return $this;
+    }
+
+    public function __construct()
+    {
+        $this->images = new ArrayCollection();
+    }
+
+    /**
+     * @return Collection<int, ProduitImage>
+     */
+    public function getImages(): Collection
+    {
+        return $this->images;
+    }
+
+    public function addImage(ProduitImage $image): static
+    {
+        if (!$this->images->contains($image)) {
+            $this->images->add($image);
+            $image->setProduit($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImage(ProduitImage $image): static
+    {
+        if ($this->images->removeElement($image)) {
+            if ($image->getProduit() === $this) {
+                $image->setProduit(null);
+            }
+        }
 
         return $this;
     }

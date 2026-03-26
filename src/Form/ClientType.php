@@ -29,6 +29,9 @@ class ClientType extends AbstractType
             ->add('adresseEmail', EmailType::class, [
                 'attr' => ['placeholder' => 'email']
                 ] )
+            ->add('password', TextType::class, [
+                'attr' => ['placeholder' => 'mot de passe']
+                ] )
         ;
     }
 

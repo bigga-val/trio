@@ -14,6 +14,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[Route('/client')]
 final class ClientController extends AbstractController
@@ -31,13 +33,22 @@ final class ClientController extends AbstractController
 
     #[Route('/new', name: 'app_client_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager, 
-    CategorieVehiculeRepository $categorieVehiculeRepository, ServicesRepository $servicesRepository): Response
+    CategorieVehiculeRepository $categorieVehiculeRepository, ServicesRepository $servicesRepository,
+    UserPasswordHasherInterface $passwordHasher): Response
     {
         $client = new Client();
         $form = $this->createForm(ClientType::class, $client);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $client->setRoles(['ROLE_USER']);
+            
+            // Hasher le mot de passe
+            if ($client->getPassword()) {
+                $hashedPassword = $passwordHasher->hashPassword($client, $client->getPassword());
+                $client->setPassword($hashedPassword);
+            }
+            
             $entityManager->persist($client);
             $entityManager->flush();
 
@@ -70,12 +81,22 @@ final class ClientController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_client_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Client $client, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Client $client, EntityManagerInterface $entityManager, 
+    UserPasswordHasherInterface $passwordHasher): Response
     {
+        // Sauvegarder le mot de passe d'origine pour vérifier les changements
+        $originalPassword = $client->getPassword();
+        
         $form = $this->createForm(ClientType::class, $client);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Si le mot de passe a changé, le hasher
+            if ($client->getPassword() !== $originalPassword && $client->getPassword()) {
+                $hashedPassword = $passwordHasher->hashPassword($client, $client->getPassword());
+                $client->setPassword($hashedPassword);
+            }
+            
             $entityManager->flush();
 
             return $this->redirectToRoute('app_client_index', [], Response::HTTP_SEE_OTHER);
@@ -96,5 +117,13 @@ final class ClientController extends AbstractController
         }
 
         return $this->redirectToRoute('app_client_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    // pour la connexion du client
+    #[Route('login', name:'login_client', methods: ['GET', 'POST'] )]
+    public function loginUser(Request $request, ClientRepository $clientRepository): Response{
+        // $passwordClient = $password->hashPassword($password, $client->getPassword());
+        // $password->setPassword($passwordClient);
+        return $this->render('client/login.html.twig');
     }
 }

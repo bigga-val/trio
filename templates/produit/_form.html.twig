@@ -34,6 +34,44 @@
                         {# <label for="exampleInputPassword1">image </label> #}
                           {{ form_widget(form.ImageProduit, {'attr': {'class': 'form-control'}}) }}
                       </div>
+                      <div class="form-group mt-2">
+                          {{ form_label(form.images) }}
+                          {{ form_widget(form.images, {'attr': {'class': 'form-control'}}) }}
+                          <small class="form-text text-muted">Vous pouvez ajouter plusieurs images additionnelles.</small>
+                      </div>
+
+                      {# Existing images (when editing) #}
+                      {% if produit is defined and produit.images is defined and produit.images|length > 0 %}
+                        <div class="mt-3">
+                            <label>Images existantes</label>
+                            <form id="delete-selected-form" method="post" action="{{ path('app_produit_images_delete_selected', {'produitId': produit.id}) }}">
+                              <input type="hidden" name="_token" value="{{ csrf_token('delete-selected-images' ~ produit.id) }}">
+                              <div class="d-flex gap-2 flex-wrap" id="images-container">
+                                {% for img in produit.images|sort((a,b) => a.position <=> b.position) %}
+                                  <div style="width:120px;" data-img-id="{{ img.id }}">
+                                    <div class="position-relative">
+                                      <img src="{{ img.filename }}" class="img-thumbnail" style="width:100%; height:80px; object-fit:cover; cursor:move;">
+                                      <div class="form-check" style="position:absolute; top:4px; left:4px;">
+                                        <input class="form-check-input image-select" type="checkbox" name="selected_images[]" value="{{ img.id }}" id="img-select-{{ img.id }}">
+                                      </div>
+                                    </div>
+                                    <div class="d-flex gap-1 mt-1">
+                                      <form method="post" action="{{ path('app_produit_image_delete', {'produitId': produit.id, 'id': img.id}) }}" onsubmit="return confirm('Supprimer cette image ?');">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete-image' ~ img.id) }}">
+                                        <button class="btn btn-sm btn-danger" type="submit">Supprimer</button>
+                                      </form>
+                                    </div>
+                                  </div>
+                                {% endfor %}
+                              </div>
+                              <div class="mt-2">
+                                <button type="submit" class="btn btn-sm btn-danger" id="delete-selected-btn">Supprimer sélection</button>
+                                <button type="button" class="btn btn-sm btn-secondary" id="save-order-btn">Enregistrer l'ordre</button>
+                              </div>
+                            </form>
+                        </div>
+                      {% endif %}
+
                         <div class="form-group">
                             {{ form_widget(form.devise, {'attr': {'class': 'form-control'}}) }}
                       </div>
@@ -42,3 +80,113 @@
         </div>
        
 {{ form_end(form) }}
+
+{% if produit is defined and produit.id %}
+<script>
+// Simple drag & drop ordering and AJAX save
+(() => {
+  const container = document.getElementById('images-container');
+  if (!container) return;
+
+  let dragSrcEl = null;
+
+  function handleDragStart(e) {
+    dragSrcEl = this;
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/html', this.outerHTML);
+    this.classList.add('dragElem');
+  }
+
+  function handleDragOver(e) {
+    if (e.preventDefault) e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    return false;
+  }
+
+  function handleDrop(e) {
+    if (e.stopPropagation) e.stopPropagation();
+    if (dragSrcEl !== this) {
+      dragSrcEl.outerHTML = this.outerHTML;
+      this.outerHTML = e.dataTransfer.getData('text/html');
+      attachListeners();
+    }
+    return false;
+  }
+
+  function handleDragEnd() {
+    this.classList.remove('dragElem');
+  }
+
+  function attachListeners(){
+    const items = container.querySelectorAll('[data-img-id]');
+    items.forEach(function(item){
+      item.setAttribute('draggable', true);
+      item.addEventListener('dragstart', handleDragStart, false);
+      item.addEventListener('dragover', handleDragOver, false);
+      item.addEventListener('drop', handleDrop, false);
+      item.addEventListener('dragend', handleDragEnd, false);
+    });
+  }
+
+  attachListeners();
+
+  document.getElementById('save-order-btn').addEventListener('click', function(){
+    const order = [];
+    container.querySelectorAll('[data-img-id]').forEach(function(el){ order.push(el.getAttribute('data-img-id')); });
+
+    const token = '{{ csrf_token('reorder-images' ~ produit.id) }}';
+
+    fetch('{{ path('app_produit_images_reorder', {'produitId': produit.id}) }}', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: '_token='+encodeURIComponent(token)+'&'+order.map((id,i)=>'order[]='+encodeURIComponent(id)).join('&')
+    }).then(r=>r.json()).then(data=>{
+      if (data.success) {
+        alert('Ordre enregistré');
+      } else {
+        alert('Erreur: '+(data.message||'Impossible d\'enregistrer'));
+      }
+    }).catch(()=>alert('Erreur réseau'));
+  });
+})();
+</script>
+
+<!-- Modal confirmation for delete selected -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmer la suppression</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Voulez-vous vraiment supprimer les images sélectionnées ? Cette action est irréversible.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+        <button type="button" class="btn btn-danger" id="confirm-delete-selected">Supprimer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+    const deleteBtn = document.getElementById('delete-selected-btn');
+    if (!deleteBtn) return;
+    const modal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+    deleteBtn.addEventListener('click', function(e){
+        e.preventDefault();
+        // ensure at least one is selected
+        const any = document.querySelectorAll('#images-container .image-select:checked').length > 0;
+        if (!any) { alert('Veuillez sélectionner au moins une image.'); return; }
+        modal.show();
+    });
+
+    document.getElementById('confirm-delete-selected').addEventListener('click', function(){
+        // submit the delete-selected form
+        document.getElementById('delete-selected-form').submit();
+    });
+})();
+</script>
+{% endif %}

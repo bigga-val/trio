@@ -12,6 +12,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Validator\Constraints\File as FileConstraint;
+use Symfony\Component\Validator\Constraints\All as AllConstraint;
 
 
 class ProduitType extends AbstractType
@@ -30,9 +33,42 @@ class ProduitType extends AbstractType
                 'attr' => ['placeholder' => 'Entrez la description du vehicule']
                 ])
             ->add('ImageProduit',FileType::class, [
-                'label'=> 'Image'
-            ]
-            )
+                'label'=> 'Image',
+                'mapped' => false,
+                'required' => false,
+                'constraints' => [
+                    new FileConstraint([
+                        'maxSize' => '5M',
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png',
+                            'image/webp',
+                        ],
+                        'mimeTypesMessage' => 'Veuillez télécharger une image valide (JPEG, PNG, WebP).',
+                    ])
+                ]
+            ])
+            ->add('images', FileType::class, [
+                'label' => 'Images supplémentaires',
+                'mapped' => false,
+                'required' => false,
+                'multiple' => true,
+                'constraints' => [
+                    new AllConstraint([
+                        'constraints' => [
+                            new FileConstraint([
+                                'maxSize' => '5M',
+                                'mimeTypes' => [
+                                    'image/jpeg',
+                                    'image/png',
+                                    'image/webp',
+                                ],
+                                'mimeTypesMessage' => 'Chaque fichier doit être une image valide (JPEG, PNG, WebP).',
+                            ])
+                        ]
+                    ])
+                ]
+            ])
             ->add('localisation',TextType::class, [
                 'attr' => ['placeholder' => 'Entrez la localisation du vehicule']
                 ])
