@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+
+{% block navbar %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block body %}
+<div class="admin-layout">
+
+    {# ── Sidebar ─────────────────────────────────────────────── #}
+    <aside class="admin-sidebar" id="adminSidebar">
+        <div class="admin-logo">
+            <div class="navbar-logo" style="font-size:18px;">New Day <span>Admin</span></div>
+            <div style="font-size:12px;color:var(--color-text-muted);margin-top:4px;">{{ app.user.nomComplet }}</div>
+        </div>
+
+        <ul class="admin-nav">
+            <li>
+                <a href="{{ path('app_admin_dashboard') }}"
+                   class="{{ app.request.attributes.get('_route') == 'app_admin_dashboard' ? 'active' : '' }}">
+                    <i class="fa-solid fa-chart-line fa-fw"></i> Dashboard
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('app_admin_produits') }}"
+                   class="{{ app.request.attributes.get('_route') starts with 'app_admin_produit' ? 'active' : '' }}">
+                    <i class="fa-solid fa-box fa-fw"></i> Produits
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('app_admin_messages') }}"
+                   class="{{ app.request.attributes.get('_route') starts with 'app_admin_message' ? 'active' : '' }}">
+                    <i class="fa-solid fa-inbox fa-fw"></i> Messages
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('app_admin_commentaires') }}"
+                   class="{{ app.request.attributes.get('_route') starts with 'app_admin_commentaire' ? 'active' : '' }}">
+                    <i class="fa-solid fa-comment-dots fa-fw"></i> Commentaires
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('app_admin_users') }}"
+                   class="{{ app.request.attributes.get('_route') starts with 'app_admin_user' ? 'active' : '' }}">
+                    <i class="fa-solid fa-users fa-fw"></i> Utilisateurs
+                </a>
+            </li>
+            <li style="margin-top:16px;border-top:1px solid var(--color-border);padding-top:16px;">
+                <a href="{{ path('app_home') }}" style="color:var(--color-text-muted);">
+                    <i class="fa-solid fa-arrow-up-right-from-square fa-fw"></i> Voir le site
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('app_deconnexion') }}" style="color:var(--color-text-muted);">
+                    <i class="fa-solid fa-right-from-bracket fa-fw"></i> Déconnexion
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    {# ── Contenu principal ───────────────────────────────────── #}
+    <main class="admin-main">
+
+        {# Flash messages #}
+        {% for type, messages in app.flashes %}
+            {% for message in messages %}
+            <div class="flash flash-{{ type }}" style="margin-bottom:24px;">{{ message }}</div>
+            {% endfor %}
+        {% endfor %}
+
+        {% block admin_content %}{% endblock %}
+    </main>
+
+</div>
+{% endblock %}

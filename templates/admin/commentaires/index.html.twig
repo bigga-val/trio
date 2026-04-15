@@ -1,0 +1,110 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Commentaires — Admin New Day{% endblock %}
+
+{% block admin_content %}
+
+<div class="admin-header">
+    <h1>Modération des commentaires</h1>
+</div>
+
+{# ── En attente ──────────────────────────────────────────── #}
+<div style="margin-bottom:48px;">
+    <h2 style="font-size:1.1rem;margin-bottom:20px;display:flex;align-items:center;gap:12px;">
+        En attente de modération
+        {% if en_attente is not empty %}
+        <span class="badge badge-gold">{{ en_attente|length }}</span>
+        {% endif %}
+    </h2>
+
+    {% if en_attente is not empty %}
+    <div style="display:flex;flex-direction:column;gap:12px;">
+        {% for com in en_attente %}
+        <div style="background:var(--color-surface);border:1px solid var(--color-gold);border-radius:8px;padding:20px;">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+                <div style="flex:1;">
+                    <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+                        <span style="font-weight:600;font-size:14px;">{{ com.nomAuteur }}</span>
+                        <span style="font-size:12px;color:var(--color-text-muted);">sur</span>
+                        <a href="{{ path('app_produit_detail', {id: com.produit.id}) }}" target="_blank"
+                           style="font-size:13px;color:var(--color-gold);">{{ com.produit.titre }}</a>
+                        <span style="font-size:12px;color:var(--color-text-muted);">· {{ com.createdAt|date('d/m/Y H:i') }}</span>
+                    </div>
+                    <p style="font-size:14px;color:var(--color-text-muted);line-height:1.6;">{{ com.contenu }}</p>
+                </div>
+
+                <div style="display:flex;gap:8px;flex-shrink:0;">
+                    <form method="POST" action="{{ path('app_admin_commentaire_approuver', {id: com.id}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('action_commentaire_' ~ com.id) }}">
+                        <button type="submit" class="btn btn-sm" style="background:rgba(34,197,94,.1);color:#22c55e;border:1px solid rgba(34,197,94,.3);">
+                            <i class="fa-solid fa-check"></i> Approuver
+                        </button>
+                    </form>
+                    <form method="POST" action="{{ path('app_admin_commentaire_rejeter', {id: com.id}) }}"
+                          onsubmit="return confirm('Supprimer ce commentaire ?')">
+                        <input type="hidden" name="_token" value="{{ csrf_token('action_commentaire_' ~ com.id) }}">
+                        <button type="submit" class="btn btn-sm" style="background:rgba(239,68,68,.1);color:#ef4444;border:1px solid rgba(239,68,68,.3);">
+                            <i class="fa-solid fa-xmark"></i> Rejeter
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:8px;padding:32px;text-align:center;color:var(--color-text-muted);">
+        ✅ Aucun commentaire en attente de modération.
+    </div>
+    {% endif %}
+</div>
+
+{# ── Approuvés (récents) ─────────────────────────────────── #}
+<div>
+    <h2 style="font-size:1.1rem;margin-bottom:20px;">Commentaires approuvés (50 derniers)</h2>
+
+    {% if approuves is not empty %}
+    <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:8px;overflow:hidden;">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Auteur</th>
+                    <th>Produit</th>
+                    <th>Commentaire</th>
+                    <th>Date</th>
+                    <th style="width:80px;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for com in approuves %}
+                <tr>
+                    <td style="font-size:14px;font-weight:600;">{{ com.nomAuteur }}</td>
+                    <td style="font-size:13px;color:var(--color-text-muted);">
+                        <a href="{{ path('app_produit_detail', {id: com.produit.id}) }}" target="_blank" style="color:var(--color-gold);">
+                            {{ com.produit.titre|slice(0,40) }}{% if com.produit.titre|length > 40 %}…{% endif %}
+                        </a>
+                    </td>
+                    <td style="font-size:13px;color:var(--color-text-muted);">
+                        {{ com.contenu|slice(0, 100) }}{% if com.contenu|length > 100 %}…{% endif %}
+                    </td>
+                    <td style="font-size:13px;color:var(--color-text-muted);">{{ com.createdAt|date('d/m/Y') }}</td>
+                    <td>
+                        <form method="POST" action="{{ path('app_admin_commentaire_rejeter', {id: com.id}) }}"
+                              onsubmit="return confirm('Supprimer ?')">
+                            <input type="hidden" name="_token" value="{{ csrf_token('action_commentaire_' ~ com.id) }}">
+                            <button type="submit" class="btn btn-sm" style="background:rgba(239,68,68,.1);color:#ef4444;border:1px solid rgba(239,68,68,.3);">🗑️</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:8px;padding:32px;text-align:center;color:var(--color-text-muted);">
+        Aucun commentaire approuvé.
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

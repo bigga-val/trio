@@ -1,0 +1,78 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Utilisateurs — Admin New Day{% endblock %}
+
+{% block admin_content %}
+
+<div class="admin-header">
+    <div>
+        <h1>Utilisateurs</h1>
+        <p style="color:var(--color-text-muted);font-size:14px;margin-top:4px;">{{ users|length }} compte{{ users|length > 1 ? 's' : '' }}</p>
+    </div>
+</div>
+
+{% if users is not empty %}
+<div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:8px;overflow:hidden;">
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Email</th>
+                <th>Téléphone</th>
+                <th>Rôles</th>
+                <th>Inscrit le</th>
+                <th>Statut</th>
+                <th style="width:120px;">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr style="{{ not user.isActif ? 'opacity:.5' : '' }}">
+                <td>
+                    <div style="font-weight:600;font-size:14px;">{{ user.nomComplet }}</div>
+                    <div style="font-size:12px;color:var(--color-gold);">@{{ user.username }}</div>
+                </td>
+                <td style="font-size:13px;color:var(--color-text-muted);">{{ user.email }}</td>
+                <td style="font-size:13px;color:var(--color-text-muted);">{{ user.telephone ?? '—' }}</td>
+                <td>
+                    {% for role in user.roles %}
+                        {% if role != 'ROLE_USER' %}
+                        <span class="badge badge-gold">{{ role }}</span>
+                        {% else %}
+                        <span class="badge badge-gray">Client</span>
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td style="font-size:13px;color:var(--color-text-muted);">{{ user.createdAt|date('d/m/Y') }}</td>
+                <td>
+                    <span class="badge {{ user.isActif ? 'badge-green' : 'badge-red' }}">
+                        {{ user.isActif ? 'Actif' : 'Désactivé' }}
+                    </span>
+                </td>
+                <td>
+                    {% if user != app.user %}
+                    <form method="POST" action="{{ path('app_admin_user_toggle', {id: user.id}) }}"
+                          onsubmit="return confirm('{{ user.isActif ? 'Désactiver' : 'Activer' }} le compte de {{ user.nomComplet }} ?')">
+                        <input type="hidden" name="_token" value="{{ csrf_token('toggle_user_' ~ user.id) }}">
+                        <button type="submit" class="btn btn-sm {{ user.isActif ? 'btn-dark' : 'btn-gold' }}" style="width:100%;justify-content:center;">
+                            {{ user.isActif ? '🔒 Désactiver' : '🔓 Activer' }}
+                        </button>
+                    </form>
+                    {% else %}
+                    <span style="font-size:12px;color:var(--color-text-muted);">Vous</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% else %}
+<div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:8px;padding:80px;text-align:center;">
+    <div style="font-size:48px;margin-bottom:16px;">👥</div>
+    <p style="color:var(--color-text-muted);">Aucun utilisateur inscrit pour l'instant.</p>
+</div>
+{% endif %}
+
+{% endblock %}

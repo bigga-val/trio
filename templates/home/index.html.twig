@@ -1,0 +1,237 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Day Groupe SARL — Véhicules & Pièces détachées à Kolwezi{% endblock %}
+
+{% block body %}
+
+{# ══ HERO ══════════════════════════════════════════════════════ #}
+<section class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <span class="hero-badge">Kolwezi, République Démocratique du Congo</span>
+
+            <h1>
+                L'Excellence<br>
+                au Service de<br>
+                <em>Votre Mobilité</em>
+            </h1>
+
+            <p>
+                Véhicules neufs et d'occasion, pièces de rechange, biens immobiliers.
+                New Day Groupe — votre partenaire de confiance depuis Kolwezi.
+            </p>
+
+            <div class="hero-actions">
+                <a href="{{ path('app_boutique') }}" class="btn btn-gold btn-lg">
+                    Découvrir nos produits
+                </a>
+                <a href="#services" class="btn btn-outline btn-lg">
+                    Nos services
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="hero-scroll">Défiler</div>
+</section>
+
+{# ══ STATS ══════════════════════════════════════════════════════ #}
+<section style="background:var(--color-surface-2); padding:48px 0; border-top:1px solid var(--color-border); border-bottom:1px solid var(--color-border);">
+    <div class="container">
+        <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:32px; text-align:center;">
+            <div>
+                <div style="font-family:var(--font-title);font-size:2.5rem;color:var(--color-gold);font-weight:700;">500+</div>
+                <div style="color:var(--color-text-muted);font-size:14px;margin-top:4px;text-transform:uppercase;letter-spacing:.08em;">Véhicules vendus</div>
+            </div>
+            <div>
+                <div style="font-family:var(--font-title);font-size:2.5rem;color:var(--color-gold);font-weight:700;">1000+</div>
+                <div style="color:var(--color-text-muted);font-size:14px;margin-top:4px;text-transform:uppercase;letter-spacing:.08em;">Pièces en stock</div>
+            </div>
+            <div>
+                <div style="font-family:var(--font-title);font-size:2.5rem;color:var(--color-gold);font-weight:700;">200+</div>
+                <div style="color:var(--color-text-muted);font-size:14px;margin-top:4px;text-transform:uppercase;letter-spacing:.08em;">Clients satisfaits</div>
+            </div>
+            <div>
+                <div style="font-family:var(--font-title);font-size:2.5rem;color:var(--color-gold);font-weight:700;">10+</div>
+                <div style="color:var(--color-text-muted);font-size:14px;margin-top:4px;text-transform:uppercase;letter-spacing:.08em;">Années d'expérience</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{# ══ SERVICES ═══════════════════════════════════════════════════ #}
+<section class="section" id="services">
+    <div class="container">
+        <div class="section-header">
+            <span class="label">Ce que nous faisons</span>
+            <h2>Nos Services</h2>
+            <div class="divider-gold"></div>
+            <p>Une gamme complète de services pour répondre à tous vos besoins en mobilité et immobilier.</p>
+        </div>
+
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon"><i class="fa-solid fa-car"></i></div>
+                <h3>Vente de véhicules</h3>
+                <p>Large sélection de véhicules neufs et d'occasion — Toyota, Nissan, Ford et bien plus.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon"><i class="fa-solid fa-wrench"></i></div>
+                <h3>Pièces détachées</h3>
+                <p>Des milliers de pièces de rechange authentiques pour toutes marques et tous modèles.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon"><i class="fa-solid fa-building"></i></div>
+                <h3>Immobilier</h3>
+                <p>Vente et location de biens immobiliers résidentiels et commerciaux à Kolwezi.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon"><i class="fa-solid fa-ship"></i></div>
+                <h3>Import / Export</h3>
+                <p>Service d'importation et d'exportation de véhicules et marchandises depuis et vers la RDC.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon"><i class="fa-solid fa-truck"></i></div>
+                <h3>Transport</h3>
+                <p>Solutions logistiques et transport de marchandises sur l'ensemble du territoire.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon"><i class="fa-solid fa-headset"></i></div>
+                <h3>Conseil</h3>
+                <p>Notre équipe vous accompagne dans chaque décision d'achat avec expertise et transparence.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+{# ══ PRODUITS VEDETTES ══════════════════════════════════════════ #}
+{% if produits_vedettes is not empty %}
+<section class="section" style="background:var(--color-surface-2);">
+    <div class="container">
+        <div class="section-header">
+            <span class="label">Sélection</span>
+            <h2>Produits Vedettes</h2>
+            <div class="divider-gold"></div>
+        </div>
+
+        <div class="products-grid">
+            {% for produit in produits_vedettes %}
+            <article class="product-card">
+                <div class="product-card-img">
+                    {% set img = produit.imagePrincipale %}
+                    {% if img %}
+                        <img src="{{ asset(img.urlPublique) }}" alt="{{ produit.titre }}" loading="lazy">
+                    {% else %}
+                        <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--color-text-muted);font-size:48px;">🚗</div>
+                    {% endif %}
+
+                    <div class="badge {{ produit.isDisponible ? 'badge-disponible' : 'badge-epuise' }}">
+                        {{ produit.isDisponible ? 'Disponible' : 'Épuisé' }}
+                    </div>
+
+                    <div class="product-card-overlay">
+                        <a href="{{ path('app_produit_detail', {id: produit.id}) }}" class="btn btn-gold btn-sm">
+                            Voir le produit
+                        </a>
+                    </div>
+                </div>
+
+                <div class="product-card-body">
+                    <div class="product-card-cat">{{ produit.categorie.nom }}</div>
+                    <h3 class="product-card-title">
+                        <a href="{{ path('app_produit_detail', {id: produit.id}) }}" style="color:inherit;">
+                            {{ produit.titre }}
+                        </a>
+                    </h3>
+                    {% if produit.prix %}
+                    <div class="product-card-price">
+                        <span class="currency">$</span> {{ produit.prix|number_format(0, ',', ' ') }}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="product-card-footer">
+                    <span>📍 {{ produit.ville ?? 'Kolwezi' }}</span>
+                    <a href="{{ path('app_produit_detail', {id: produit.id}) }}" class="btn btn-outline btn-sm">Détail →</a>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+
+        <div style="text-align:center;margin-top:48px;">
+            <a href="{{ path('app_boutique') }}" class="btn btn-outline btn-lg">
+                Voir tous les produits
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{# ══ POURQUOI NOUS ══════════════════════════════════════════════ #}
+<section class="section">
+    <div class="container">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;">
+            <div>
+                <span class="label" style="color:var(--color-gold);font-size:12px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;">Pourquoi nous choisir</span>
+                <h2 style="font-size:2.2rem;margin:16px 0 24px;">Qualité & Confiance<br>depuis <em style="color:var(--color-gold);font-style:normal;">Kolwezi</em></h2>
+                <div style="width:60px;height:2px;background:var(--color-gold);margin-bottom:28px;"></div>
+                <p style="color:var(--color-text-muted);margin-bottom:20px;line-height:1.8;">
+                    New Day Groupe SARL est votre référence locale pour l'achat de véhicules, de pièces automobiles
+                    et de biens immobiliers. Nous sélectionnons chaque produit avec soin pour vous garantir
+                    la meilleure qualité au meilleur prix.
+                </p>
+                <ul style="list-style:none;display:flex;flex-direction:column;gap:12px;margin-bottom:32px;">
+                    <li style="display:flex;align-items:center;gap:12px;font-size:14px;color:var(--color-text-muted);">
+                        <i class="fa-solid fa-circle-check" style="color:var(--color-gold);font-size:16px;"></i> Produits certifiés et garantis
+                    </li>
+                    <li style="display:flex;align-items:center;gap:12px;font-size:14px;color:var(--color-text-muted);">
+                        <i class="fa-solid fa-circle-check" style="color:var(--color-gold);font-size:16px;"></i> Service client disponible 6j/7
+                    </li>
+                    <li style="display:flex;align-items:center;gap:12px;font-size:14px;color:var(--color-text-muted);">
+                        <i class="fa-solid fa-circle-check" style="color:var(--color-gold);font-size:16px;"></i> Livraison sur Kolwezi et environs
+                    </li>
+                    <li style="display:flex;align-items:center;gap:12px;font-size:14px;color:var(--color-text-muted);">
+                        <i class="fa-solid fa-circle-check" style="color:var(--color-gold);font-size:16px;"></i> Importation directe — prix compétitifs
+                    </li>
+                </ul>
+                <a href="{{ path('app_boutique') }}" class="btn btn-gold">Explorer la boutique</a>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:8px;padding:32px 24px;text-align:center;">
+                    <div style="font-family:var(--font-title);font-size:2rem;color:var(--color-gold);margin-bottom:8px;">24h</div>
+                    <div style="font-size:13px;color:var(--color-text-muted);">Réponse garantie</div>
+                </div>
+                <div style="background:var(--color-gold);border-radius:8px;padding:32px 24px;text-align:center;margin-top:24px;">
+                    <div style="font-family:var(--font-title);font-size:2rem;color:#0A0A0A;margin-bottom:8px;">100%</div>
+                    <div style="font-size:13px;color:#0A0A0A;font-weight:600;">Authentique</div>
+                </div>
+                <div style="background:var(--color-gold);border-radius:8px;padding:32px 24px;text-align:center;margin-top:-16px;">
+                    <div style="font-family:var(--font-title);font-size:2rem;color:#0A0A0A;margin-bottom:8px;">RDC</div>
+                    <div style="font-size:13px;color:#0A0A0A;font-weight:600;">Basé à Kolwezi</div>
+                </div>
+                <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:8px;padding:32px 24px;text-align:center;">
+                    <div style="font-family:var(--font-title);font-size:2rem;color:var(--color-gold);margin-bottom:8px;">Top</div>
+                    <div style="font-size:13px;color:var(--color-text-muted);">Fournisseur local</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{# ══ CTA CONTACT ════════════════════════════════════════════════ #}
+<section style="background:linear-gradient(135deg,var(--color-surface-2) 0%,var(--color-surface) 100%);border-top:1px solid var(--color-border);padding:80px 0;">
+    <div class="container" style="text-align:center;">
+        <span style="color:var(--color-gold);font-size:12px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;">Nous contacter</span>
+        <h2 style="font-size:2.5rem;margin:16px 0 24px;">Un projet ? Une question ?</h2>
+        <p style="color:var(--color-text-muted);max-width:500px;margin:0 auto 40px;">
+            Notre équipe est à votre disposition pour vous accompagner dans votre recherche.
+        </p>
+        <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+            <a href="tel:+243970000337" class="btn btn-gold btn-lg"><i class="fa-solid fa-phone"></i> +243 970 000 337</a>
+            <a href="mailto:info@newdaysarl.com" class="btn btn-outline btn-lg"><i class="fa-solid fa-envelope"></i> Envoyer un email</a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

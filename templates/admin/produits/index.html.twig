@@ -1,0 +1,90 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Produits — Admin New Day{% endblock %}
+
+{% block admin_content %}
+
+<div class="admin-header">
+    <div>
+        <h1>Produits</h1>
+        <p style="color:var(--color-text-muted);font-size:14px;margin-top:4px;">{{ produits|length }} produit{{ produits|length > 1 ? 's' : '' }}</p>
+    </div>
+    <a href="{{ path('app_admin_produit_nouveau') }}" class="btn btn-gold">+ Nouveau produit</a>
+</div>
+
+{% if produits is not empty %}
+<div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:8px;overflow:hidden;">
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th style="width:60px;">Image</th>
+                <th>Titre</th>
+                <th>Catégorie</th>
+                <th>Prix</th>
+                <th>Statut</th>
+                <th>Date</th>
+                <th style="width:160px;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for produit in produits %}
+            <tr>
+                <td>
+                    {% set img = produit.imagePrincipale %}
+                    {% if img %}
+                    <div style="width:50px;height:40px;border-radius:4px;overflow:hidden;">
+                        <img src="{{ asset(img.urlPublique) }}" alt="" style="width:100%;height:100%;object-fit:cover;">
+                    </div>
+                    {% else %}
+                    <div style="width:50px;height:40px;border-radius:4px;background:var(--color-surface-2);display:flex;align-items:center;justify-content:center;font-size:18px;">
+                        🚗
+                    </div>
+                    {% endif %}
+                </td>
+                <td>
+                    <div style="font-weight:600;font-size:14px;">{{ produit.titre }}</div>
+                    <div style="font-size:12px;color:var(--color-text-muted);">{{ produit.images|length }} image{{ produit.images|length > 1 ? 's' : '' }}</div>
+                </td>
+                <td>
+                    <span class="badge badge-gray">{{ produit.categorie.nom }}</span>
+                </td>
+                <td style="color:var(--color-gold);font-weight:600;">
+                    {% if produit.prix %}$ {{ produit.prix|number_format(0, ',', ' ') }}{% else %}<span style="color:var(--color-text-muted);">—</span>{% endif %}
+                </td>
+                <td>
+                    <span class="badge {{ produit.isDisponible ? 'badge-green' : 'badge-red' }}">
+                        {{ produit.isDisponible ? 'Disponible' : 'Épuisé' }}
+                    </span>
+                </td>
+                <td style="color:var(--color-text-muted);font-size:13px;">
+                    {{ produit.createdAt|date('d/m/Y') }}
+                </td>
+                <td>
+                    <div style="display:flex;gap:8px;">
+                        <a href="{{ path('app_admin_produit_modifier', {id: produit.id}) }}"
+                           class="btn btn-dark btn-sm"><i class="fa-solid fa-pen-to-square"></i> Modifier</a>
+
+                        <form method="POST" action="{{ path('app_admin_produit_supprimer', {id: produit.id}) }}"
+                              onsubmit="return confirm('Supprimer « {{ produit.titre }} » ? Cette action est irréversible.')">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete_produit_' ~ produit.id) }}">
+                            <button type="submit" class="btn btn-sm" style="background:rgba(239,68,68,0.1);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% else %}
+<div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:8px;padding:80px;text-align:center;">
+    <div style="font-size:48px;margin-bottom:16px;">📦</div>
+    <p style="color:var(--color-text-muted);margin-bottom:24px;">Aucun produit pour l'instant.</p>
+    <a href="{{ path('app_admin_produit_nouveau') }}" class="btn btn-gold">Ajouter le premier produit</a>
+</div>
+{% endif %}
+
+{% endblock %}

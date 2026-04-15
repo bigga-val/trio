@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion — New Day Groupe SARL{% endblock %}
+
+{% block body %}
+
+<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:100px 24px 60px;background:radial-gradient(ellipse at 50% 0%,rgba(201,168,76,0.05) 0%,transparent 60%);">
+    <div style="width:100%;max-width:440px;">
+
+        <div style="text-align:center;margin-bottom:40px;">
+            <a href="{{ path('app_home') }}" class="navbar-logo" style="font-size:26px;display:block;margin-bottom:20px;">
+                New Day <span>Groupe</span>
+            </a>
+            <h1 style="font-size:1.8rem;margin-bottom:8px;">Bienvenue</h1>
+            <p style="color:var(--color-text-muted);font-size:14px;">Connectez-vous à votre compte</p>
+        </div>
+
+        {% if error %}
+        <div class="flash flash-error" style="margin-bottom:24px;">
+            {{ error.messageKey|trans(error.messageData, 'security') }}
+        </div>
+        {% endif %}
+
+        <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:10px;padding:40px;">
+            <form method="POST" action="{{ path('app_connexion') }}">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                <div class="form-group">
+                    <label class="form-label" for="username">Nom d'utilisateur</label>
+                    <input
+                        type="text"
+                        name="username"
+                        id="username"
+                        class="form-control"
+                        value="{{ last_username }}"
+                        autocomplete="username"
+                        autofocus
+                        placeholder="votre_username"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="password">Mot de passe</label>
+                    <input
+                        type="password"
+                        name="password"
+                        id="password"
+                        class="form-control"
+                        autocomplete="current-password"
+                        placeholder="••••••••"
+                        required
+                    >
+                </div>
+
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;">
+                    <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px;color:var(--color-text-muted);">
+                        <input type="checkbox" name="remember_me" style="accent-color:var(--color-gold);">
+                        Se souvenir de moi
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-gold" style="width:100%;justify-content:center;">
+                    Se connecter
+                </button>
+            </form>
+        </div>
+
+        <p style="text-align:center;margin-top:24px;font-size:14px;color:var(--color-text-muted);">
+            Pas encore de compte ?
+            <a href="{{ path('app_inscription') }}" style="color:var(--color-gold);font-weight:600;">Créer un compte</a>
+        </p>
+
+    </div>
+</div>
+
+{% endblock %}

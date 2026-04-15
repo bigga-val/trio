@@ -1,0 +1,148 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un compte — New Day Groupe SARL{% endblock %}
+
+{% block body %}
+
+<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:100px 24px 60px;background:radial-gradient(ellipse at 50% 0%,rgba(201,168,76,0.05) 0%,transparent 60%);">
+    <div style="width:100%;max-width:520px;">
+
+        <div style="text-align:center;margin-bottom:40px;">
+            <a href="{{ path('app_home') }}" class="navbar-logo" style="font-size:26px;display:block;margin-bottom:20px;">
+                New Day <span>Groupe</span>
+            </a>
+            <h1 style="font-size:1.8rem;margin-bottom:8px;">Créer un compte</h1>
+            <p style="color:var(--color-text-muted);font-size:14px;">Rejoignez New Day Groupe SARL</p>
+        </div>
+
+        <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:10px;padding:40px;">
+            <form method="POST" action="{{ path('app_inscription') }}">
+
+                <div class="form-group">
+                    <label class="form-label" for="username">Nom d'utilisateur *</label>
+                    <input
+                        type="text"
+                        name="username"
+                        id="username"
+                        class="form-control"
+                        value="{{ data.username ?? '' }}"
+                        placeholder="Ex: jean_dupont"
+                        pattern="[a-zA-Z0-9_\-]{3,50}"
+                        title="Lettres, chiffres, _ et - uniquement (3-50 caractères)"
+                        required
+                    >
+                    <div style="font-size:12px;color:var(--color-text-muted);margin-top:4px;">
+                        Utilisé pour vous connecter. Lettres, chiffres, _ et - uniquement.
+                    </div>
+                    {% if errors.username is defined %}
+                    <div class="form-error">{{ errors.username }}</div>
+                    {% endif %}
+                </div>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                    <div class="form-group">
+                        <label class="form-label" for="prenom">Prénom</label>
+                        <input
+                            type="text"
+                            name="prenom"
+                            id="prenom"
+                            class="form-control {{ errors.prenom is defined ? 'border-red' : '' }}"
+                            value="{{ data.prenom ?? '' }}"
+                            placeholder="Jean"
+                            required
+                        >
+                        {% if errors.prenom is defined %}
+                        <div class="form-error">{{ errors.prenom }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="nom">Nom</label>
+                        <input
+                            type="text"
+                            name="nom"
+                            id="nom"
+                            class="form-control"
+                            value="{{ data.nom ?? '' }}"
+                            placeholder="Dupont"
+                            required
+                        >
+                        {% if errors.nom is defined %}
+                        <div class="form-error">{{ errors.nom }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="email">Adresse email</label>
+                    <input
+                        type="email"
+                        name="email"
+                        id="email"
+                        class="form-control"
+                        value="{{ data.email ?? '' }}"
+                        placeholder="votre@email.com"
+                        required
+                    >
+                    {% if errors.email is defined %}
+                    <div class="form-error">{{ errors.email }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="telephone">Téléphone <span style="color:var(--color-text-muted);text-transform:none;font-weight:400;">(optionnel)</span></label>
+                    <input
+                        type="tel"
+                        name="telephone"
+                        id="telephone"
+                        class="form-control"
+                        value="{{ data.telephone ?? '' }}"
+                        placeholder="+243 970 000 000"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="password">Mot de passe</label>
+                    <input
+                        type="password"
+                        name="password"
+                        id="password"
+                        class="form-control"
+                        placeholder="Minimum 6 caractères"
+                        required
+                    >
+                    {% if errors.password is defined %}
+                    <div class="form-error">{{ errors.password }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group" style="margin-bottom:32px;">
+                    <label class="form-label" for="confirm">Confirmer le mot de passe</label>
+                    <input
+                        type="password"
+                        name="confirm"
+                        id="confirm"
+                        class="form-control"
+                        placeholder="Répétez votre mot de passe"
+                        required
+                    >
+                    {% if errors.confirm is defined %}
+                    <div class="form-error">{{ errors.confirm }}</div>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="btn btn-gold" style="width:100%;justify-content:center;">
+                    Créer mon compte
+                </button>
+            </form>
+        </div>
+
+        <p style="text-align:center;margin-top:24px;font-size:14px;color:var(--color-text-muted);">
+            Déjà un compte ?
+            <a href="{{ path('app_connexion') }}" style="color:var(--color-gold);font-weight:600;">Se connecter</a>
+        </p>
+
+    </div>
+</div>
+
+{% endblock %}

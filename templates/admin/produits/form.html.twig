@@ -1,0 +1,243 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}{{ produit ? 'Modifier' : 'Nouveau' }} produit — Admin New Day{% endblock %}
+
+{% block admin_content %}
+
+<div class="admin-header">
+    <div style="display:flex;align-items:center;gap:16px;">
+        <a href="{{ path('app_admin_produits') }}" class="btn btn-dark btn-sm">← Retour</a>
+        <h1>{{ produit ? 'Modifier : ' ~ produit.titre : 'Nouveau produit' }}</h1>
+    </div>
+</div>
+
+<form method="POST" enctype="multipart/form-data">
+<div style="display:grid;grid-template-columns:1fr 340px;gap:32px;">
+
+    {# ── Colonne principale ──────────────────────────────────── #}
+    <div style="display:flex;flex-direction:column;gap:24px;">
+
+        {# Infos de base #}
+        <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:8px;padding:28px;">
+            <h3 style="font-size:16px;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--color-border);">
+                Informations du produit
+            </h3>
+
+            <div class="form-group">
+                <label class="form-label" for="titre">Titre *</label>
+                <input type="text" name="titre" id="titre" class="form-control"
+                       value="{{ produit ? produit.titre : '' }}" required
+                       placeholder="Ex: Toyota Land Cruiser 200 2020">
+                {% if errors.titre is defined %}<div class="form-error">{{ errors.titre }}</div>{% endif %}
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="description">Description *</label>
+                <textarea name="description" id="description" class="form-control" rows="6" required
+                          placeholder="Description détaillée du produit...">{{ produit ? produit.description : '' }}</textarea>
+                {% if errors.description is defined %}<div class="form-error">{{ errors.description }}</div>{% endif %}
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                <div class="form-group">
+                    <label class="form-label" for="prix">Prix (USD)</label>
+                    <input type="number" name="prix" id="prix" class="form-control"
+                           value="{{ produit ? produit.prix : '' }}" step="0.01" min="0"
+                           placeholder="Ex: 25000">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="ville">Ville</label>
+                    <input type="text" name="ville" id="ville" class="form-control"
+                           value="{{ produit ? produit.ville : 'Kolwezi' }}"
+                           placeholder="Kolwezi">
+                </div>
+            </div>
+        </div>
+
+        {# Upload images #}
+        <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:8px;padding:28px;">
+            <h3 style="font-size:16px;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--color-border);">
+                Images
+            </h3>
+
+            {# Images existantes #}
+            {% if produit and produit.images is not empty %}
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px;margin-bottom:24px;">
+                {% for img in produit.images %}
+                <div style="position:relative;border-radius:6px;overflow:hidden;border:2px solid {{ img.isPrincipale ? 'var(--color-gold)' : 'var(--color-border)' }};">
+                    <img src="{{ asset(img.urlPublique) }}" alt=""
+                         style="width:100%;aspect-ratio:4/3;object-fit:cover;">
+
+                    {# Badge principale #}
+                    {% if img.isPrincipale %}
+                    <div style="position:absolute;top:4px;left:4px;background:var(--color-gold);color:#0A0A0A;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;">
+                        PRINCIPALE
+                    </div>
+                    {% endif %}
+
+                    {# Actions #}
+                    <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(10,10,10,.9);padding:6px;display:flex;gap:4px;">
+                        {# Définir comme principale #}
+                        {% if not img.isPrincipale %}
+                        <button type="button" onclick="setPrincipale({{ img.id }})"
+                                style="flex:1;background:rgba(201,168,76,.2);color:var(--color-gold);border:none;border-radius:3px;padding:3px;font-size:11px;cursor:pointer;">
+                            ★
+                        </button>
+                        {% endif %}
+
+                        {# Supprimer #}
+                        <form method="POST" action="{{ path('app_admin_image_supprimer', {id: img.id}) }}"
+                              style="flex:1;" onsubmit="return confirm('Supprimer cette image ?')">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete_image_' ~ img.id) }}">
+                            <button type="submit"
+                                    style="width:100%;background:rgba(239,68,68,.2);color:#ef4444;border:none;border-radius:3px;padding:3px;font-size:11px;cursor:pointer;">
+                                🗑️
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {# Champ upload nouvelles images #}
+            <div style="border:2px dashed var(--color-border);border-radius:8px;padding:32px;text-align:center;cursor:pointer;transition:border-color .3s;"
+                 id="dropzone"
+                 ondragover="event.preventDefault();this.style.borderColor='var(--color-gold)'"
+                 ondragleave="this.style.borderColor='var(--color-border)'"
+                 ondrop="handleDrop(event)">
+                <div style="font-size:32px;margin-bottom:8px;color:var(--color-gold);"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+                <p style="color:var(--color-text-muted);font-size:14px;margin-bottom:12px;">
+                    Glisser-déposer des images ici ou
+                </p>
+                <label for="images" class="btn btn-outline btn-sm" style="cursor:pointer;">
+                    Choisir des fichiers
+                </label>
+                <input type="file" name="images[]" id="images" multiple accept="image/*"
+                       style="display:none;" onchange="previewImages(this)">
+                <div style="font-size:12px;color:var(--color-text-muted);margin-top:8px;">
+                    JPG, PNG, WEBP — max 5 Mo par image
+                </div>
+            </div>
+
+            {# Prévisualisation avant upload #}
+            <div id="preview" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px;margin-top:16px;"></div>
+
+            {% if errors.images is defined %}<div class="form-error">{{ errors.images }}</div>{% endif %}
+        </div>
+    </div>
+
+    {# ── Colonne latérale ────────────────────────────────────── #}
+    <div style="display:flex;flex-direction:column;gap:20px;">
+
+        {# Publier #}
+        <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:8px;padding:24px;">
+            <h3 style="font-size:15px;margin-bottom:20px;">Publication</h3>
+
+            <div style="margin-bottom:20px;">
+                <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;">
+                    <input type="checkbox" name="is_disponible" value="1"
+                           {{ (produit is null or produit.isDisponible) ? 'checked' : '' }}
+                           style="accent-color:var(--color-gold);width:16px;height:16px;">
+                    <span>Produit disponible</span>
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-gold" style="width:100%;justify-content:center;">
+                <i class="fa-solid fa-{{ produit ? 'floppy-disk' : 'circle-check' }}"></i>
+                {{ produit ? 'Enregistrer' : 'Créer le produit' }}
+            </button>
+
+            {% if produit %}
+            <a href="{{ path('app_produit_detail', {id: produit.id}) }}"
+               class="btn btn-dark btn-sm" style="width:100%;justify-content:center;margin-top:8px;"
+               target="_blank">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> Voir sur le site
+            </a>
+            {% endif %}
+        </div>
+
+        {# Catégorie #}
+        <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:8px;padding:24px;">
+            <h3 style="font-size:15px;margin-bottom:16px;">Catégorie *</h3>
+
+            {% if categories is not empty %}
+            <div style="display:flex;flex-direction:column;gap:8px;">
+                {% for cat in categories %}
+                <label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:10px;border-radius:6px;border:1px solid var(--color-border);transition:border-color .3s;"
+                       onmouseover="this.style.borderColor='var(--color-gold)'"
+                       onmouseout="this.style.borderColor=this.querySelector('input').checked?'var(--color-gold)':'var(--color-border)'">
+                    <input type="radio" name="categorie_id" value="{{ cat.id }}"
+                           {{ produit and produit.categorie.id == cat.id ? 'checked' : '' }}
+                           style="accent-color:var(--color-gold);" required>
+                    <div>
+                        <div style="font-size:14px;font-weight:500;">{{ cat.nom }}</div>
+                        <div style="font-size:11px;color:var(--color-text-muted);">{{ cat.type }}</div>
+                    </div>
+                </label>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div style="color:var(--color-text-muted);font-size:14px;text-align:center;padding:16px;">
+                Aucune catégorie.<br>Créez-en depuis la base de données.
+            </div>
+            {% endif %}
+            {% if errors.categorie is defined %}<div class="form-error">{{ errors.categorie }}</div>{% endif %}
+        </div>
+
+    </div>
+</div>
+
+{# Champ caché pour l'image principale (JS) #}
+<input type="hidden" name="image_principale" id="imagePrincipaleId" value="">
+
+</form>
+
+{% endblock %}
+
+{% block javascripts %}
+<script>
+// Prévisualisation des images sélectionnées
+function previewImages(input) {
+    var preview = document.getElementById('preview');
+    preview.innerHTML = '';
+    Array.from(input.files).forEach(function(file) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            var div = document.createElement('div');
+            div.style.cssText = 'border-radius:6px;overflow:hidden;aspect-ratio:4/3;border:1px solid var(--color-border);';
+            div.innerHTML = '<img src="' + e.target.result + '" style="width:100%;height:100%;object-fit:cover;">';
+            preview.appendChild(div);
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+// Drag & drop
+function handleDrop(e) {
+    e.preventDefault();
+    document.getElementById('dropzone').style.borderColor = 'var(--color-border)';
+    var dt = e.dataTransfer;
+    var input = document.getElementById('images');
+    input.files = dt.files;
+    previewImages(input);
+}
+
+// Clic sur dropzone = ouvre le file picker
+document.getElementById('dropzone').addEventListener('click', function(e) {
+    if (e.target.tagName !== 'LABEL' && e.target.tagName !== 'INPUT') {
+        document.getElementById('images').click();
+    }
+});
+
+// Définir image principale
+function setPrincipale(imageId) {
+    document.getElementById('imagePrincipaleId').value = imageId;
+    document.querySelectorAll('[onclick^="setPrincipale"]').forEach(function(btn) {
+        btn.style.background = 'rgba(201,168,76,.2)';
+        btn.style.color = 'var(--color-gold)';
+    });
+    alert('L\'image sera définie comme principale après enregistrement.');
+}
+</script>
+{% endblock %}

@@ -1,0 +1,216 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ produit.titre }} — New Day Groupe SARL{% endblock %}
+{% block meta_description %}{{ produit.description|slice(0, 160) }}{% endblock %}
+
+{% block body %}
+
+<div style="padding-top:100px;min-height:100vh;">
+<div class="container section">
+
+    {# ── Fil d'Ariane ─────────────────────────────────────────── #}
+    <nav style="font-size:13px;color:var(--color-text-muted);margin-bottom:40px;display:flex;align-items:center;gap:8px;">
+        <a href="{{ path('app_home') }}" style="color:var(--color-text-muted);">Accueil</a>
+        <span>›</span>
+        <a href="{{ path('app_boutique') }}" style="color:var(--color-text-muted);">Boutique</a>
+        <span>›</span>
+        <a href="{{ path('app_boutique', {categorie: produit.categorie.id}) }}" style="color:var(--color-text-muted);">{{ produit.categorie.nom }}</a>
+        <span>›</span>
+        <span style="color:var(--color-gold);">{{ produit.titre }}</span>
+    </nav>
+
+    {# ── Layout produit ───────────────────────────────────────── #}
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:64px;margin-bottom:80px;">
+
+        {# ── Galerie ──── #}
+        <div>
+            {% set images = produit.images %}
+            {% if images is not empty %}
+            <div class="product-gallery">
+                <div class="gallery-main">
+                    <img id="mainImg" src="{{ asset(images.first.urlPublique) }}" alt="{{ produit.titre }}">
+                </div>
+
+                {% if images|length > 1 %}
+                <div class="gallery-thumbs">
+                    {% for img in images %}
+                    <div class="gallery-thumb {{ loop.first ? 'active' : '' }}"
+                         onclick="changeImg(this, '{{ asset(img.urlPublique) }}')">
+                        <img src="{{ asset(img.urlPublique) }}" alt="{{ produit.titre }} - image {{ loop.index }}">
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            {% else %}
+            <div style="aspect-ratio:4/3;background:var(--color-surface);border:1px solid var(--color-border);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:80px;">
+                {{ produit.categorie.type == 'vehicule' ? '🚗' : (produit.categorie.type == 'immobilier' ? '🏘️' : '🔧') }}
+            </div>
+            {% endif %}
+        </div>
+
+        {# ── Infos produit ── #}
+        <div>
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+                <span style="color:var(--color-gold);font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;">
+                    {{ produit.categorie.nom }}
+                </span>
+                <span class="badge {{ produit.isDisponible ? 'badge-green' : 'badge-red' }}">
+                    {{ produit.isDisponible ? 'Disponible' : 'Épuisé' }}
+                </span>
+            </div>
+
+            <h1 style="font-size:2rem;margin-bottom:24px;">{{ produit.titre }}</h1>
+
+            {% if produit.prix %}
+            <div class="product-info-price">
+                $ {{ produit.prix|number_format(0, ',', ' ') }}
+                <span style="font-size:14px;color:var(--color-text-muted);font-family:var(--font-body);font-weight:400;"> USD</span>
+            </div>
+            {% else %}
+            <div style="font-size:18px;color:var(--color-text-muted);margin-bottom:24px;">Prix sur demande</div>
+            {% endif %}
+
+            {% if produit.ville %}
+            <div style="display:flex;align-items:center;gap:8px;color:var(--color-text-muted);font-size:14px;margin-bottom:24px;">
+                📍 {{ produit.ville }}
+            </div>
+            {% endif %}
+
+            <div style="border-top:1px solid var(--color-border);border-bottom:1px solid var(--color-border);padding:24px 0;margin-bottom:32px;">
+                <div style="font-size:15px;line-height:1.8;color:var(--color-text-muted);">
+                    {{ produit.description|nl2br }}
+                </div>
+            </div>
+
+            <div style="font-size:12px;color:var(--color-text-muted);margin-bottom:32px;">
+                Publié le {{ produit.createdAt|date('d/m/Y') }}
+            </div>
+
+            {# ── Formulaire message ── #}
+            {% if produit.isDisponible %}
+            <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:8px;padding:28px;">
+                <h3 style="font-size:18px;margin-bottom:20px;">
+                    <i class="fa-solid fa-comment-dots" style="color:var(--color-gold);"></i> Contacter le vendeur
+                </h3>
+
+                {% if app.user %}
+                <form method="POST">
+                    <input type="hidden" name="_form" value="message">
+                    <input type="hidden" name="_token" value="{{ csrf_token('message') }}">
+                    <div class="form-group">
+                        <label class="form-label">Votre message</label>
+                        <textarea name="contenu" class="form-control" rows="4"
+                            placeholder="Je suis intéressé par ce produit..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-gold" style="width:100%;">
+                        Envoyer le message
+                    </button>
+                </form>
+                {% else %}
+                <div style="text-align:center;padding:16px;">
+                    <p style="color:var(--color-text-muted);font-size:14px;margin-bottom:20px;">
+                        Connectez-vous pour envoyer un message au vendeur.
+                    </p>
+                    <a href="{{ path('app_connexion') }}" class="btn btn-gold" style="width:100%;justify-content:center;">
+                        Se connecter pour contacter
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {# ══ COMMENTAIRES ════════════════════════════════════════════ #}
+    <section style="border-top:1px solid var(--color-border);padding-top:64px;">
+        <div class="section-header left" style="margin-bottom:40px;">
+            <span class="label">Avis</span>
+            <h2 style="font-size:1.8rem;">
+                Commentaires
+                {% if commentaires is not empty %}
+                <span style="color:var(--color-text-muted);font-size:1rem;font-family:var(--font-body);font-weight:400;">
+                    ({{ commentaires|length }})
+                </span>
+                {% endif %}
+            </h2>
+            <div class="divider-gold left"></div>
+        </div>
+
+        {# Liste des commentaires #}
+        {% if commentaires is not empty %}
+        <div style="display:flex;flex-direction:column;gap:24px;margin-bottom:56px;">
+            {% for com in commentaires %}
+            <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:8px;padding:24px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+                    <div style="display:flex;align-items:center;gap:12px;">
+                        <div style="width:40px;height:40px;border-radius:50%;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--color-gold);">
+                            {{ com.nomAuteur|slice(0,1)|upper }}
+                        </div>
+                        <div>
+                            <div style="font-weight:600;font-size:14px;">{{ com.nomAuteur }}</div>
+                        </div>
+                    </div>
+                    <span style="font-size:12px;color:var(--color-text-muted);">
+                        {{ com.createdAt|date('d/m/Y') }}
+                    </span>
+                </div>
+                <p style="font-size:14px;color:var(--color-text-muted);line-height:1.7;">
+                    {{ com.contenu }}
+                </p>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div style="text-align:center;padding:40px 0;color:var(--color-text-muted);font-size:15px;margin-bottom:56px;">
+            Aucun commentaire pour l'instant. Soyez le premier !
+        </div>
+        {% endif %}
+
+        {# Formulaire commentaire #}
+        <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:8px;padding:32px;max-width:680px;">
+            <h3 style="font-size:18px;margin-bottom:24px;">Laisser un commentaire</h3>
+            <form method="POST">
+                <input type="hidden" name="_form" value="commentaire">
+                <input type="hidden" name="_token" value="{{ csrf_token('commentaire') }}">
+
+                {% if not app.user %}
+                <div class="form-group">
+                    <label class="form-label" for="nom">Votre nom</label>
+                    <input type="text" name="nom" id="nom" class="form-control"
+                           placeholder="Votre nom ou pseudo" required>
+                </div>
+                {% endif %}
+
+                <div class="form-group">
+                    <label class="form-label" for="contenu">Commentaire</label>
+                    <textarea name="contenu" id="contenu" class="form-control" rows="4"
+                              placeholder="Partagez votre avis sur ce produit..." required></textarea>
+                </div>
+
+                <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+                    <button type="submit" class="btn btn-gold">Publier le commentaire</button>
+                    <span style="font-size:12px;color:var(--color-text-muted);">
+                        Votre commentaire sera affiché après modération.
+                    </span>
+                </div>
+            </form>
+        </div>
+    </section>
+
+</div>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+<script>
+function changeImg(thumb, src) {
+    document.getElementById('mainImg').src = src;
+    document.querySelectorAll('.gallery-thumb').forEach(function(t) {
+        t.classList.remove('active');
+    });
+    thumb.classList.add('active');
+}
+</script>
+{% endblock %}

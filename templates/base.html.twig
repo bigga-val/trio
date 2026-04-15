@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}New Day Groupe SARL — Kolwezi, RDC{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}New Day Groupe SARL — Vente de véhicules, pièces de rechange et biens immobiliers à Kolwezi, République Démocratique du Congo.{% endblock %}">
+
+    {# Font Awesome 6 #}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+    {# CSS global #}
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+
+    {% block stylesheets %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+
+{# ── Navbar ──────────────────────────────────────────────── #}
+{% block navbar %}
+<nav class="navbar" id="mainNavbar">
+    <div class="container">
+        <a href="{{ path('app_home') }}" class="navbar-logo">
+            New Day <span>Groupe</span>
+        </a>
+
+        <ul class="navbar-links" id="navLinks">
+            <li id="navClose" style="display:none">
+                <button onclick="toggleMenu()" style="background:none;border:none;color:var(--color-gold);font-size:28px;cursor:pointer;">✕</button>
+            </li>
+            <li><a href="{{ path('app_home') }}"     {% if app.request.attributes.get('_route') == 'app_home' %}class="active"{% endif %}>Accueil</a></li>
+            <li><a href="{{ path('app_boutique') }}" {% if app.request.attributes.get('_route') starts with 'app_boutique' %}class="active"{% endif %}>Boutique</a></li>
+            <li><a href="{{ path('app_home') }}#services">Services</a></li>
+            <li><a href="{{ path('app_home') }}#contact">Contact</a></li>
+            {% if is_granted('ROLE_ADMIN') %}
+            <li><a href="{{ path('app_admin_dashboard') }}" class="text-gold">Admin</a></li>
+            {% endif %}
+        </ul>
+
+        <div class="navbar-actions">
+            {% if app.user %}
+                <a href="{{ path('app_compte_dashboard') }}" class="btn btn-outline btn-sm">Mon compte</a>
+                <a href="{{ path('app_deconnexion') }}" class="btn btn-dark btn-sm">Déconnexion</a>
+            {% else %}
+                <a href="{{ path('app_connexion') }}"   class="btn btn-outline btn-sm">Connexion</a>
+                <a href="{{ path('app_inscription') }}" class="btn btn-gold btn-sm">Inscription</a>
+            {% endif %}
+        </div>
+
+        <button class="navbar-burger" id="burgerBtn" onclick="toggleMenu()" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+</nav>
+{% endblock %}
+
+{# ── Flash messages ──────────────────────────────────────── #}
+{% for type, messages in app.flashes %}
+    {% for message in messages %}
+        <div class="flash flash-{{ type }}" style="position:fixed;top:80px;right:24px;z-index:2000;min-width:300px;max-width:480px;">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endfor %}
+
+{# ── Contenu principal ───────────────────────────────────── #}
+{% block body %}{% endblock %}
+
+{# ── Footer ──────────────────────────────────────────────── #}
+{% block footer %}
+<footer class="footer" id="contact">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <div class="navbar-logo">New Day <span>Groupe</span></div>
+                <p>Votre partenaire de confiance pour l'achat de véhicules, pièces automobiles et biens immobiliers à Kolwezi, RDC.</p>
+                <a href="{{ path('app_boutique') }}" class="btn btn-gold btn-sm">Voir nos produits</a>
+            </div>
+
+            <div class="footer-col">
+                <h4>Navigation</h4>
+                <ul>
+                    <li><a href="{{ path('app_home') }}">Accueil</a></li>
+                    <li><a href="{{ path('app_boutique') }}">Boutique</a></li>
+                    <li><a href="{{ path('app_boutique') }}?type=vehicule">Véhicules</a></li>
+                    <li><a href="{{ path('app_boutique') }}?type=piece_rechange">Pièces détachées</a></li>
+                    <li><a href="{{ path('app_boutique') }}?type=immobilier">Immobilier</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Mon compte</h4>
+                <ul>
+                    {% if app.user %}
+                    <li><a href="{{ path('app_compte_dashboard') }}">Tableau de bord</a></li>
+                    <li><a href="{{ path('app_compte_messages') }}">Mes messages</a></li>
+                    <li><a href="{{ path('app_compte_profil') }}">Mon profil</a></li>
+                    <li><a href="{{ path('app_deconnexion') }}">Déconnexion</a></li>
+                    {% else %}
+                    <li><a href="{{ path('app_connexion') }}">Connexion</a></li>
+                    <li><a href="{{ path('app_inscription') }}">Créer un compte</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Contact</h4>
+                <ul class="footer-contact">
+                    <li><span class="icon"><i class="fa-solid fa-location-dot"></i></span><span>LDK, Manika 2077, Kolwezi, RDC</span></li>
+                    <li><span class="icon"><i class="fa-solid fa-phone"></i></span><a href="tel:+243970000337">+243 970 000 337</a></li>
+                    <li><span class="icon"><i class="fa-solid fa-envelope"></i></span><a href="mailto:info@newdaysarl.com">info@newdaysarl.com</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <span>© {{ "now"|date("Y") }} New Day Groupe SARL — Tous droits réservés</span>
+            <span>Développé par <a href="https://insoftware.tech" target="_blank">Insoftware Lualaba</a></span>
+        </div>
+    </div>
+</footer>
+{% endblock %}
+
+{# ── JavaScript global ───────────────────────────────────── #}
+<script>
+(function() {
+    var nav = document.getElementById('mainNavbar');
+    window.addEventListener('scroll', function() {
+        nav.classList.toggle('scrolled', window.scrollY > 60);
+    }, { passive: true });
+})();
+
+function toggleMenu() {
+    var links = document.getElementById('navLinks');
+    var close = document.getElementById('navClose');
+    links.classList.toggle('open');
+    if (close) close.style.display = links.classList.contains('open') ? 'block' : 'none';
+}
+
+setTimeout(function() {
+    document.querySelectorAll('.flash').forEach(function(el) {
+        el.style.transition = 'opacity 0.5s';
+        el.style.opacity = '0';
+        setTimeout(function() { el.remove(); }, 500);
+    });
+}, 4000);
+</script>
+
+{% block javascripts %}{% endblock %}
+
+</body>
+</html>

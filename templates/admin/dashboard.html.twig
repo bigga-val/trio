@@ -1,0 +1,70 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Dashboard Admin — New Day Groupe{% endblock %}
+
+{% block admin_content %}
+
+<div class="admin-header">
+    <h1>Dashboard</h1>
+    <a href="{{ path('app_admin_produit_nouveau') }}" class="btn btn-gold btn-sm">+ Nouveau produit</a>
+</div>
+
+{# ── Stats ───────────────────────────────────────────────── #}
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-value">{{ nb_produits }}</div>
+        <div class="stat-label">Produits</div>
+    </div>
+    <div class="stat-card" style="{{ nb_messages_nlus > 0 ? 'border-color:var(--color-gold)' : '' }}">
+        <div class="stat-value" style="{{ nb_messages_nlus > 0 ? 'color:var(--color-gold)' : 'color:var(--color-text-muted)' }}">
+            {{ nb_messages_nlus }}
+        </div>
+        <div class="stat-label">Messages non lus</div>
+    </div>
+    <div class="stat-card" style="{{ nb_commentaires > 0 ? 'border-color:var(--color-gold)' : '' }}">
+        <div class="stat-value" style="{{ nb_commentaires > 0 ? 'color:var(--color-gold)' : 'color:var(--color-text-muted)' }}">
+            {{ nb_commentaires }}
+        </div>
+        <div class="stat-label">Commentaires en attente</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value">{{ nb_users }}</div>
+        <div class="stat-label">Utilisateurs actifs</div>
+    </div>
+</div>
+
+{# ── Accès rapide ────────────────────────────────────────── #}
+<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:20px;">
+    <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:8px;padding:28px;">
+        <h3 style="font-size:16px;margin-bottom:16px;">Actions rapides</h3>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+            <a href="{{ path('app_admin_produit_nouveau') }}" class="btn btn-gold btn-sm" style="justify-content:flex-start;"><i class="fa-solid fa-plus fa-fw"></i> Ajouter un produit</a>
+            <a href="{{ path('app_admin_messages') }}" class="btn btn-dark btn-sm" style="justify-content:flex-start;">
+                <i class="fa-solid fa-inbox fa-fw"></i> Voir les messages{% if nb_messages_nlus > 0 %} <span class="badge badge-gold" style="margin-left:auto;">{{ nb_messages_nlus }}</span>{% endif %}
+            </a>
+            <a href="{{ path('app_admin_commentaires') }}" class="btn btn-dark btn-sm" style="justify-content:flex-start;">
+                <i class="fa-solid fa-comment-dots fa-fw"></i> Modérer commentaires{% if nb_commentaires > 0 %} <span class="badge badge-gold" style="margin-left:auto;">{{ nb_commentaires }}</span>{% endif %}
+            </a>
+        </div>
+    </div>
+
+    <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:8px;padding:28px;">
+        <h3 style="font-size:16px;margin-bottom:16px;">Infos site</h3>
+        <div style="display:flex;flex-direction:column;gap:12px;font-size:14px;color:var(--color-text-muted);">
+            <div style="display:flex;justify-content:space-between;">
+                <span>Environnement</span>
+                <span class="badge badge-green">{{ app.environment }}</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;">
+                <span>Framework</span>
+                <span style="color:var(--color-text);">Symfony 7</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;">
+                <span>Date</span>
+                <span style="color:var(--color-text);">{{ "now"|date('d/m/Y') }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

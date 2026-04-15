@@ -1,0 +1,155 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Boutique — New Day Groupe SARL{% endblock %}
+
+{% block body %}
+
+<div style="padding-top:100px;min-height:100vh;">
+<div class="container section">
+
+    {# ── En-tête ─────────────────────────────────────────────── #}
+    <div class="section-header left" style="margin-bottom:40px;">
+        <span class="label">Notre catalogue</span>
+        <h1 style="font-size:2.5rem;">Boutique</h1>
+        <div class="divider-gold left"></div>
+        <p style="color:var(--color-text-muted);">
+            {{ total }} produit{{ total > 1 ? 's' : '' }} disponible{{ total > 1 ? 's' : '' }}
+        </p>
+    </div>
+
+    {# ── Filtres par type ─────────────────────────────────────── #}
+    <div class="boutique-filters">
+        <a href="{{ path('app_boutique', {q: recherche}) }}"
+           class="filter-btn {{ type is null and categorie_id is null ? 'active' : '' }}">
+            Tous
+        </a>
+        <a href="{{ path('app_boutique', {type: 'vehicule', q: recherche}) }}"
+           class="filter-btn {{ type == 'vehicule' ? 'active' : '' }}">
+            🚗 Véhicules
+        </a>
+        <a href="{{ path('app_boutique', {type: 'piece_rechange', q: recherche}) }}"
+           class="filter-btn {{ type == 'piece_rechange' ? 'active' : '' }}">
+            🔧 Pièces détachées
+        </a>
+        <a href="{{ path('app_boutique', {type: 'immobilier', q: recherche}) }}"
+           class="filter-btn {{ type == 'immobilier' ? 'active' : '' }}">
+            🏘️ Immobilier
+        </a>
+    </div>
+
+    {# ── Recherche ────────────────────────────────────────────── #}
+    <form method="GET" action="{{ path('app_boutique') }}" class="boutique-search">
+        {% if type %}<input type="hidden" name="type" value="{{ type }}">{% endif %}
+        {% if categorie_id %}<input type="hidden" name="categorie" value="{{ categorie_id }}">{% endif %}
+        <input
+            type="text"
+            name="q"
+            value="{{ recherche ?? '' }}"
+            placeholder="Rechercher un véhicule, une pièce..."
+            class="input-search"
+        >
+        <button type="submit" class="btn btn-gold">Rechercher</button>
+        {% if recherche %}
+        <a href="{{ path('app_boutique', {type: type, categorie: categorie_id}) }}" class="btn btn-dark">✕ Effacer</a>
+        {% endif %}
+    </form>
+
+    {# ── Catégories ───────────────────────────────────────────── #}
+    {% if categories is not empty %}
+    <div class="boutique-filters" style="margin-bottom:48px;">
+        {% for cat in categories %}
+        <a href="{{ path('app_boutique', {categorie: cat.id, q: recherche}) }}"
+           class="filter-btn {{ categorie_id == cat.id ? 'active' : '' }}">
+            {{ cat.nom }}
+        </a>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {# ── Grille produits ──────────────────────────────────────── #}
+    {% if produits is not empty %}
+    <div class="products-grid">
+        {% for produit in produits %}
+        <article class="product-card">
+            <div class="product-card-img">
+                {% set img = produit.imagePrincipale %}
+                {% if img %}
+                    <img src="{{ asset(img.urlPublique) }}" alt="{{ produit.titre }}" loading="lazy">
+                {% else %}
+                    <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--color-text-muted);font-size:48px;">
+                        {{ produit.categorie.type == 'vehicule' ? '🚗' : (produit.categorie.type == 'immobilier' ? '🏘️' : '🔧') }}
+                    </div>
+                {% endif %}
+
+                <div class="badge {{ produit.isDisponible ? 'badge-disponible' : 'badge-epuise' }}">
+                    {{ produit.isDisponible ? 'Disponible' : 'Épuisé' }}
+                </div>
+
+                <div class="product-card-overlay">
+                    <a href="{{ path('app_produit_detail', {id: produit.id}) }}" class="btn btn-gold btn-sm">
+                        Voir le produit
+                    </a>
+                </div>
+            </div>
+
+            <div class="product-card-body">
+                <div class="product-card-cat">{{ produit.categorie.nom }}</div>
+                <h2 class="product-card-title" style="font-size:18px;">
+                    <a href="{{ path('app_produit_detail', {id: produit.id}) }}" style="color:inherit;">
+                        {{ produit.titre }}
+                    </a>
+                </h2>
+                {% if produit.prix %}
+                <div class="product-card-price">
+                    <span class="currency">$</span> {{ produit.prix|number_format(0, ',', ' ') }}
+                </div>
+                {% else %}
+                <div style="color:var(--color-text-muted);font-size:14px;">Prix sur demande</div>
+                {% endif %}
+            </div>
+
+            <div class="product-card-footer">
+                <span>📍 {{ produit.ville ?? 'Kolwezi' }}</span>
+                <a href="{{ path('app_produit_detail', {id: produit.id}) }}" class="btn btn-outline btn-sm">Détail →</a>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+
+    {# ── Pagination ───────────────────────────────────────────── #}
+    {% if total_pages > 1 %}
+    <nav class="pagination" aria-label="Pagination">
+        {% if page > 1 %}
+        <a href="{{ path('app_boutique', {page: page - 1, categorie: categorie_id, type: type, q: recherche}) }}" aria-label="Page précédente">‹</a>
+        {% endif %}
+
+        {% for p in 1..total_pages %}
+            {% if p == page %}
+                <span class="current">{{ p }}</span>
+            {% elseif p == 1 or p == total_pages or (p >= page - 2 and p <= page + 2) %}
+                <a href="{{ path('app_boutique', {page: p, categorie: categorie_id, type: type, q: recherche}) }}">{{ p }}</a>
+            {% elseif p == page - 3 or p == page + 3 %}
+                <span>…</span>
+            {% endif %}
+        {% endfor %}
+
+        {% if page < total_pages %}
+        <a href="{{ path('app_boutique', {page: page + 1, categorie: categorie_id, type: type, q: recherche}) }}" aria-label="Page suivante">›</a>
+        {% endif %}
+    </nav>
+    {% endif %}
+
+    {% else %}
+    {# Aucun produit #}
+    <div style="text-align:center;padding:80px 0;">
+        <div style="font-size:64px;margin-bottom:24px;">🔍</div>
+        <h2 style="font-size:1.5rem;margin-bottom:12px;">Aucun produit trouvé</h2>
+        <p style="color:var(--color-text-muted);margin-bottom:32px;">Essayez de modifier vos filtres ou votre recherche.</p>
+        <a href="{{ path('app_boutique') }}" class="btn btn-gold">Voir tous les produits</a>
+    </div>
+    {% endif %}
+
+</div>
+</div>
+
+{% endblock %}

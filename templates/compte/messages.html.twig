@@ -1,0 +1,75 @@
+{% extends 'compte/base_compte.html.twig' %}
+
+{% block title %}Mes messages — New Day Groupe SARL{% endblock %}
+
+{% block compte_content %}
+
+<div style="margin-bottom:40px;">
+    <span style="color:var(--color-gold);font-size:12px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;">Espace client</span>
+    <h1 style="font-size:2rem;margin-top:8px;">Mes messages</h1>
+    <p style="color:var(--color-text-muted);margin-top:8px;">
+        {{ messages|length }} conversation{{ messages|length > 1 ? 's' : '' }}
+    </p>
+</div>
+
+{% if messages is not empty %}
+<div style="display:flex;flex-direction:column;gap:12px;">
+    {% for msg in messages %}
+    {% set repNonLues = msg.reponses|filter(r => not r.lu and r.expediteur != app.user)|length %}
+    <a href="{{ path('app_compte_message_detail', {id: msg.id}) }}"
+       style="background:var(--color-surface);border:1px solid {{ repNonLues > 0 ? 'var(--color-gold)' : 'var(--color-border)' }};border-radius:8px;padding:24px;display:flex;align-items:center;gap:20px;text-decoration:none;color:inherit;transition:all .3s;"
+       onmouseover="this.style.borderColor='var(--color-gold)';this.style.transform='translateX(4px)'"
+       onmouseout="this.style.borderColor='{{ repNonLues > 0 ? 'var(--color-gold)' : 'var(--color-border)' }}';this.style.transform='translateX(0)'">
+
+        {# Image produit #}
+        <div style="width:72px;height:56px;border-radius:6px;overflow:hidden;flex-shrink:0;background:var(--color-surface-2);border:1px solid var(--color-border);">
+            {% set img = msg.produit.imagePrincipale %}
+            {% if img %}
+                <img src="{{ asset(img.urlPublique) }}" alt="{{ msg.produit.titre }}"
+                     style="width:100%;height:100%;object-fit:cover;">
+            {% else %}
+                <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:24px;">🚗</div>
+            {% endif %}
+        </div>
+
+        {# Contenu #}
+        <div style="flex:1;min-width:0;">
+            <div style="font-size:12px;color:var(--color-gold);font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px;">
+                {{ msg.produit.categorie.nom }}
+            </div>
+            <div style="font-weight:600;font-size:15px;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                {{ msg.produit.titre }}
+            </div>
+            <div style="font-size:13px;color:var(--color-text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                {{ msg.contenu|slice(0, 100) }}{% if msg.contenu|length > 100 %}…{% endif %}
+            </div>
+        </div>
+
+        {# Meta #}
+        <div style="text-align:right;flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
+            <span style="font-size:12px;color:var(--color-text-muted);">
+                {{ msg.createdAt|date('d/m/Y') }}
+            </span>
+            {% if repNonLues > 0 %}
+            <span class="badge badge-gold">{{ repNonLues }} rép.</span>
+            {% else %}
+            <span style="font-size:12px;color:var(--color-text-muted);">{{ msg.reponses|length }} rép.</span>
+            {% endif %}
+            <span style="color:var(--color-gold);font-size:18px;">›</span>
+        </div>
+    </a>
+    {% endfor %}
+</div>
+
+{% else %}
+<div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:10px;padding:80px 40px;text-align:center;">
+    <div style="font-size:64px;margin-bottom:24px;">💬</div>
+    <h2 style="font-size:1.5rem;margin-bottom:12px;">Aucune conversation</h2>
+    <p style="color:var(--color-text-muted);max-width:400px;margin:0 auto 32px;">
+        Visitez notre boutique et contactez-nous sur un produit qui vous intéresse.
+    </p>
+    <a href="{{ path('app_boutique') }}" class="btn btn-gold">Explorer la boutique</a>
+</div>
+{% endif %}
+
+{% endblock %}

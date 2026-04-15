@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:newdaysarl.com)",
+      "Read(//d/Projects/trio project/trio/**)",
+      "Bash(python -c ':*)",
+      "Bash(python3 -c ':*)",
+      "Bash(node -e ':*)",
+      "Bash(php bin/console debug:container --no-interaction)",
+      "Bash(cp \"D:/Projects/trio project/trio/images/alpha1.JPG\"    \"D:/Projects/trio project/trio/my_trio/public/uploads/produits/toyota-alphard.jpg\")",
+      "Bash(cp \"D:/Projects/trio project/trio/images/ford1.jpg\"     \"D:/Projects/trio project/trio/my_trio/public/uploads/produits/ford-raptor.jpg\")",
+      "Bash(cp \"D:/Projects/trio project/trio/images/ist1.jpg\"      \"D:/Projects/trio project/trio/my_trio/public/uploads/produits/toyota-ist-1.jpg\")",
+      "Bash(cp \"D:/Projects/trio project/trio/images/ist2.jpg\"      \"D:/Projects/trio project/trio/my_trio/public/uploads/produits/toyota-ist-2.jpg\")",
+      "Bash(cp \"D:/Projects/trio project/trio/images/v1 \\(1\\).jpg\"    \"D:/Projects/trio project/trio/my_trio/public/uploads/produits/bmw-640-tableau.jpg\")",
+      "Bash(php bin/console app:load-fixtures)"
+    ]
+  }
+}
