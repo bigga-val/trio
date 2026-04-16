@@ -40,7 +40,7 @@ class ProduitRepository extends ServiceEntityRepository
      *
      * @return Produit[]
      */
-    public function findFiltered(?int $categorieId, ?string $recherche, int $page = 1, int $parPage = 12): array
+    public function findFiltered(?int $categorieId, ?string $type, ?string $recherche, int $page = 1, int $parPage = 12): array
     {
         $qb = $this->createQueryBuilder('p')
             ->leftJoin('p.images', 'i')
@@ -52,6 +52,8 @@ class ProduitRepository extends ServiceEntityRepository
 
         if ($categorieId !== null) {
             $qb->andWhere('c.id = :catId')->setParameter('catId', $categorieId);
+        } elseif ($type !== null && $type !== '') {
+            $qb->andWhere('c.type = :type')->setParameter('type', $type);
         }
 
         if ($recherche !== null && $recherche !== '') {
@@ -69,7 +71,7 @@ class ProduitRepository extends ServiceEntityRepository
     /**
      * Compte les produits filtrés (pour la pagination).
      */
-    public function countFiltered(?int $categorieId, ?string $recherche): int
+    public function countFiltered(?int $categorieId, ?string $type, ?string $recherche): int
     {
         $qb = $this->createQueryBuilder('p')
             ->select('COUNT(p.id)')
@@ -79,6 +81,8 @@ class ProduitRepository extends ServiceEntityRepository
 
         if ($categorieId !== null) {
             $qb->andWhere('c.id = :catId')->setParameter('catId', $categorieId);
+        } elseif ($type !== null && $type !== '') {
+            $qb->andWhere('c.type = :type')->setParameter('type', $type);
         }
 
         if ($recherche !== null && $recherche !== '') {

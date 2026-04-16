@@ -30,16 +30,14 @@ class BoutiqueController extends AbstractController
         $type        = $request->query->get('type');
         $recherche   = $request->query->get('q');
 
-        // Filtrer par type si fourni (vehicule, immobilier, piece_rechange)
-        if ($type && !$categorieId) {
-            $cat = $categorieRepo->findByType($type);
-            // On passe les IDs des catégories de ce type
-        }
-
-        $produits   = $produitRepo->findFiltered($categorieId, $recherche, $page, $parPage);
-        $total      = $produitRepo->countFiltered($categorieId, $recherche);
+        $produits   = $produitRepo->findFiltered($categorieId, $type, $recherche, $page, $parPage);
+        $total      = $produitRepo->countFiltered($categorieId, $type, $recherche);
         $totalPages = (int) ceil($total / $parPage);
-        $categories = $categorieRepo->findAll();
+
+        // Affiche uniquement les catégories du type actif (ou toutes si aucun type)
+        $categories = $type
+            ? $categorieRepo->findBy(['type' => $type], ['nom' => 'ASC'])
+            : $categorieRepo->findAll();
 
         return $this->render('boutique/index.html.twig', [
             'produits'      => $produits,

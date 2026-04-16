@@ -18,22 +18,25 @@
     </div>
 
     {# ── Filtres par type ─────────────────────────────────────── #}
+    <div style="margin-bottom:12px;">
+        <span style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--color-text-muted);">Secteur</span>
+    </div>
     <div class="boutique-filters">
         <a href="{{ path('app_boutique', {q: recherche}) }}"
            class="filter-btn {{ type is null and categorie_id is null ? 'active' : '' }}">
-            Tous
+            <i class="fa-solid fa-border-all" style="margin-right:6px;font-size:13px;"></i>Tous
         </a>
         <a href="{{ path('app_boutique', {type: 'vehicule', q: recherche}) }}"
            class="filter-btn {{ type == 'vehicule' ? 'active' : '' }}">
-            🚗 Véhicules
+            <i class="fa-solid fa-car" style="margin-right:6px;font-size:13px;"></i>Véhicules
         </a>
         <a href="{{ path('app_boutique', {type: 'piece_rechange', q: recherche}) }}"
            class="filter-btn {{ type == 'piece_rechange' ? 'active' : '' }}">
-            🔧 Pièces détachées
+            <i class="fa-solid fa-screwdriver-wrench" style="margin-right:6px;font-size:13px;"></i>Pièces détachées
         </a>
         <a href="{{ path('app_boutique', {type: 'immobilier', q: recherche}) }}"
            class="filter-btn {{ type == 'immobilier' ? 'active' : '' }}">
-            🏘️ Immobilier
+            <i class="fa-solid fa-building" style="margin-right:6px;font-size:13px;"></i>Immobilier
         </a>
     </div>
 
@@ -56,9 +59,18 @@
 
     {# ── Catégories ───────────────────────────────────────────── #}
     {% if categories is not empty %}
+    <div style="margin-bottom:12px;">
+        <span style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--color-text-muted);">
+            <i class="fa-solid fa-tag" style="margin-right:4px;"></i>Catégorie
+        </span>
+    </div>
     <div class="boutique-filters" style="margin-bottom:48px;">
+        <a href="{{ path('app_boutique', {type: type, q: recherche}) }}"
+           class="filter-btn {{ categorie_id is null ? 'active' : '' }}">
+            Toutes
+        </a>
         {% for cat in categories %}
-        <a href="{{ path('app_boutique', {categorie: cat.id, q: recherche}) }}"
+        <a href="{{ path('app_boutique', {categorie: cat.id, type: type, q: recherche}) }}"
            class="filter-btn {{ categorie_id == cat.id ? 'active' : '' }}">
             {{ cat.nom }}
         </a>
@@ -76,8 +88,14 @@
                 {% if img %}
                     <img src="{{ asset(img.urlPublique) }}" alt="{{ produit.titre }}" loading="lazy">
                 {% else %}
-                    <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--color-text-muted);font-size:48px;">
-                        {{ produit.categorie.type == 'vehicule' ? '🚗' : (produit.categorie.type == 'immobilier' ? '🏘️' : '🔧') }}
+                    <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--color-text-muted);font-size:42px;">
+                        {% if produit.categorie.type == 'vehicule' %}
+                            <i class="fa-solid fa-car"></i>
+                        {% elseif produit.categorie.type == 'immobilier' %}
+                            <i class="fa-solid fa-building"></i>
+                        {% else %}
+                            <i class="fa-solid fa-screwdriver-wrench"></i>
+                        {% endif %}
                     </div>
                 {% endif %}
 
@@ -109,7 +127,7 @@
             </div>
 
             <div class="product-card-footer">
-                <span>📍 {{ produit.ville ?? 'Kolwezi' }}</span>
+                <span><i class="fa-solid fa-location-dot" style="color:var(--color-gold);margin-right:4px;"></i>{{ produit.ville ?? 'Kolwezi' }}</span>
                 <a href="{{ path('app_produit_detail', {id: produit.id}) }}" class="btn btn-outline btn-sm">Détail →</a>
             </div>
         </article>
